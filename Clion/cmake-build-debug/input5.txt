@@ -1,0 +1,9 @@
+statement -> iteration_sta | expression_sta | selection_sta
+assi_exp -> Identifier = expression
+selection_sta -> if ( expression ) statement | if ( expression ) statement else statement
+iteration_sta -> while ( expression ) statement | for ( expression_sta expression_sta ) statement | for ( expression_sta expression_sta expression ) statement
+expression -> E expression_
+expression_ -> > E expression_ | < E expression_ |>= E expresslon_ | <= E expression_ | == E expression_ | != E expression_ | @
+E -> T | E w0 T
+T -> F | T w1 F
+F -> ID | CONS | ( E )

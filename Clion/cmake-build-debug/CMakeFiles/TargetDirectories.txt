@@ -1,0 +1,3 @@
+C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/Clion.dir
+C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/rebuild_cache.dir

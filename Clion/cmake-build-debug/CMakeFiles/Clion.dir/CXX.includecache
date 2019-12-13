@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Honk/Desktop/sources/C++/Clion/complier.h
+bits/stdc++.h
+-
+
+C:/Users/Honk/Desktop/sources/C++/Clion/pre_grammer.cpp
+complier.h
+C:/Users/Honk/Desktop/sources/C++/Clion/complier.h
+
