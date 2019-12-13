@@ -7,16 +7,16 @@ struct production {  //产生式结构体
     string ri[100];
     set<string> first[100];
     set<string> follow;
-    set<string> selected;
+    set<string> select[100];
     int size;
 } p[maxn], np[maxn];//p是从文件中读入的文法,np是消除左递归后的文法
 int cnt = 0;
 int dnt = 0;
 
-int vt_size = 7;
-int vn_size = 7;
-string vt[maxn] = {"w0", "w1", "ID", "CONS", "(", ")", "@"}; //终结符集合
-string vn[maxn] = {"S", "EVA_SENTENCE", "F", "T", "T'", "E", "E'"}; //非终结符集合
+int vt_size = 10;
+int vn_size = 9;
+string vt[maxn] = {"w0", "w1", "ID", "CONS", "(", ")", "if", "else", "while", "@"}; //终结符集合
+string vn[maxn] = {"S", "EVA_SENTENCE", "SEL_SENTENCE", "ITE_SENTENCE", "F", "T", "T'", "E", "E'"}; //非终结符集合
 bool judge_vt(string c) {  //判断一个单词是否是终结符
     for (int i = 0; i < vt_size; i++) {
         if (c == vt[i])
@@ -60,7 +60,11 @@ void Left_Recursion() {  //判断有无左递归并消除左递归
         if (flag)
             break;
         for (int j = 0; j < p[i].size; j++) {
-            if (p[i].li[0] == p[i].ri[j][0]) {
+            stringstream ss(p[i].ri[j]);
+            string ri_first;
+            ss >> ri_first;
+            //cout << ri_first << endl;
+            if (p[i].li == ri_first) {
                 flag = true;   //有左递归
                 break;
             }
@@ -68,20 +72,28 @@ void Left_Recursion() {  //判断有无左递归并消除左递归
     }
     if (flag) {    //消除左递归
         cout << "当前文法有左递归，消除左递归后的文法为：" << endl;
-        string ss;
+        string left;
         for (int i = 0; i < cnt; i++) {
             bool tag = false;
             for (int j = 0; j < p[i].size; j++) {
-                if (p[i].li[0] == p[i].ri[j][0]) {   //当前产生式有左递归
+                stringstream ss(p[i].ri[j]);
+                string ri_first;
+                ss >> ri_first;
+                //cout << ri_first << endl;
+                if (p[i].li == ri_first) {
+                    //当前产生式有左递归
                     tag = true;
                     for (int l = 0; l < p[i].size; l++) {
-                        if (p[i].li[0] != p[i].ri[l][0]) {
-                            ss = p[i].ri[l];   //ss存不含有左递归的产生式
+                        stringstream sss(p[i].ri[l]);
+                        string rri_first;
+                        sss >> rri_first;
+                        if (p[i].li != rri_first) {
+                            left = p[i].ri[l];   //ss存不含有左递归的产生式
                             cout << p[i].li << " -> ";
                             int len = p[i].ri[j].length();
-                            cout << ss + " {" + p[i].ri[j].substr(1, len - 1) + " }" << endl;
+                            cout << left + " {" + p[i].ri[j].substr(1, len - 1) + " }" << endl;
                             np[dnt].li = p[i].li;
-                            np[dnt].ri[np[dnt].size++] = ss + " " + np[dnt].li + "\'";
+                            np[dnt].ri[np[dnt].size++] = left + " " + np[dnt].li + "\'";
                             dnt++;
                             np[dnt].li = np[dnt - 1].li + "\'";
                             np[dnt].ri[np[dnt].size++] = p[i].ri[j].substr(2, len - 1) + " " + np[dnt].li;
@@ -133,7 +145,7 @@ void First(int i, int j, string c) {   //递归求first集
             if (np[k].li == c) {  //找到左部
                 for (int l = 0; l < np[k].size; l++) {  //遍历右部
                     string tmp = "";
-                    stringstream ss(np[k].ri[j]);  //产生式右部
+                    stringstream ss(np[k].ri[l]);  //产生式右部
                     ss >> tmp;
                     First(i, j, tmp);
                 }
@@ -285,6 +297,74 @@ void test_follow() {   //输入follow集并输出
     }
 }
 
+bool generate_empty(string ri) {
+    //int len=ri.size();
+    stringstream ss(ri);
+    string ww;
+    while (ss >> ww) {
+        //cout << ww << endl;
+        if (judge_vt(ww) && ww != "@") {
+            return false;
+        } else if (judge_vn(ww)) {
+            bool tag = false;
+            for (int i = 0; i < dnt; i++) {
+                if (tag) break;
+                if (np[i].li == ww) {
+                    for (int j = 0; j < np[i].size; j++) {
+                        if (generate_empty(np[i].ri[j])) {
+                            tag = true;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (tag) continue;
+            else return false;
+        }
+    }
+    return true;
+}
+
+//生成select集
+void make_select() {
+    for (int i = 0; i < dnt; i++) {
+        for (int j = 0; j < np[i].size; j++) {
+            set<string> &temp = np[i].first[j];
+            set<string>::iterator it = temp.begin();
+            for (; it != temp.end(); it++) {
+                np[i].select[j].insert(*it);
+            }
+            if (generate_empty(np[i].ri[j])) {
+                set<string> &temp = np[i].follow;
+                set<string>::iterator it2 = temp.begin();
+                for (; it2 != temp.end(); it2++) {
+                    np[i].select[j].insert(*it2);
+                }
+            }
+        }
+    }
+}
+
+void get_select() {
+    make_select();
+}
+
+void test_select() {
+    get_select();
+    cout << "Select集如下:" << endl;
+    for (int i = 0; i < dnt; i++) {
+        for (int j = 0; j < np[i].size; j++) {
+            cout << "Select of " << np[i].li << " ->" << np[i].ri[j] << endl;
+            int len = np[i].select[j].size();
+            //cout << len << endl;
+            for (set<string>::iterator it = np[i].select[j].begin(); it != np[i].select[j].end(); it++) {
+                cout << *it << " ";
+            }
+            cout << endl;
+        }
+    }
+}
 
 void pre_grammer() {
     void get_token();
@@ -336,4 +416,5 @@ void pre_grammer() {
     Left_Recursion();  //判断并消除左递归
     test_first();
     test_follow();
+    test_select();
 }

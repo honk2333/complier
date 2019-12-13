@@ -3,29 +3,11 @@
 //
 
 #include"grammer.h"
-
-
-struct anaylist {   //ll(1)分析表
-    string s1;
-    string s2;
-    string ans;
-} List[100];
-int List_size = 0;  //ll(1)分析表长度
-
-bool alpha_word(char w) {   //判断是否是字母或单词
-    if (w <= 'z' && w >= 'a')
-        return true;
-    if (w <= 'Z' && w >= 'A')
-        return true;
-    if (w <= '9' && w >= '0')
-        return true;
-    return false;
-}
-
+/*
 string sentence;  //要处理的句子
 string word;  //当前单词
-int pos;//下一个单词的起始位置
-
+int pos;//下一个单词的起始位置*/
+/*
 void Next() {   //下一个单词
     int is_word(string);
     char c;
@@ -42,96 +24,265 @@ void Next() {   //下一个单词
         }
     }
     return;
-}
+}*/
 
 
-
-
-
-void test_analyst() {   //输入ll(1)分析表并输出
-    List_size = 0;
-    List[List_size].s1 = "E";
-    List[List_size].s2 = "I";
-    List[List_size].ans = "T E1";
-    List_size++;
-
-    List[List_size].s1 = "E";
-    List[List_size].s2 = "(";
-    List[List_size].ans = "T E1";
-    List_size++;
-
-    List[List_size].s1 = "E1";
-    List[List_size].s2 = "w0";
-    List[List_size].ans = "w0 T E1";
-    List_size++;
-
-    List[List_size].s1 = "E1";
-    List[List_size].s2 = ")";
-    List[List_size].ans = "@";
-    List_size++;
-
-    List[List_size].s1 = "T";
-    List[List_size].s2 = "I";
-    List[List_size].ans = "F T1";
-    List_size++;
-
-    List[List_size].s1 = "T";
-    List[List_size].s2 = "(";
-    List[List_size].ans = "F T1";
-    List_size++;
-
-    List[List_size].s1 = "T1";
-    List[List_size].s2 = "w0";
-    List[List_size].ans = "@";
-    List_size++;
-
-    List[List_size].s1 = "T1";
-    List[List_size].s2 = "w1";
-    List[List_size].ans = "w1 F T1";
-    List_size++;
-
-    List[List_size].s1 = "T1";
-    List[List_size].s2 = ")";
-    List[List_size].ans = "@";
-    List_size++;
-
-    List[List_size].s1 = "F";
-    List[List_size].s2 = "I";
-    List[List_size].ans = "I";
-    List_size++;
-
-    List[List_size].s1 = "F";
-    List[List_size].s2 = "(";
-    List[List_size].ans = "( E )";
-    List_size++;
-
-    List[List_size].s1 = "E1";
-    List[List_size].s2 = "#";
-    List[List_size].ans = "@";
-    List_size++;
-
-    List[List_size].s1 = "T1";
-    List[List_size].s2 = "#";
-    List[List_size].ans = "@";
-    List_size++;
-}
-
-struct fouryuan {   //四元式结构体
+/*struct fouryuan {   //四元式结构体
     string s1;
     string s2;
     string op;
     string res;
 } fout[maxn * 10];
 int fout_size = 0;  //四元式数量
-vector<string> sem;
+vector <string> sem;*/
 
+
+map<pair<string, string>, int> L_table;
+
+//生成分析表
+void make_table() {
+    cout << "\n分析表\n\n";
+    map < int, set < string >> ::iterator
+    it = select.begin();
+    for (; it != select.end(); it++) {
+        string left_str;
+        left_str = Left_fan[it->first];
+        set <string> &temp = it->second;
+        set<string>::iterator itl = temp.begin();
+        for (; itl != temp.end(); itl++) {
+            L_table[make_pair(left_str, *itl)] = it->first;
+        }
+    }
+    for(int i=0;i<dnt;i++){
+
+    }
+    set <string> visi_table;
+    vector <string> letter;
+    map<string, int>::iterator it_Vt = Vt.begin();
+    for (; it_Vt != Vt.end(); it_Vt++) {
+        letter.push_back(it_Vt->first);
+    }
+    letter.push_back("#");
+    for (int i = 0; i <= (int) (letter.size() + 1) * 10; i++)
+        printf("-");
+    puts("");
+    printf("|%9s", "|");
+    for (int i = 0; i < (int) letter.size(); i++)
+        printf("%5s%5s", letter[i].c_str(), "|");
+    puts("");
+    for (int i = 0; i <= (int) (letter.size() + 1) * 10; i++)
+        printf("-");
+    puts("");
+    map<string, int>::iterator it_table = Left.begin();
+    for (; it_table != Left.end(); it_table++) {
+        //if (visi_table.count(it_table->first.first))break;
+        //visi_table.insert(it_table->first.first);
+        //cout << it_table->first.first << it_table->first.second << it_table->second << endl;
+        printf("|%5s%4s", it_table->first.c_str(), "|");
+        for (int j = 0; j < (int) letter.size(); j++) {
+            if (L_table.count(make_pair(it_table->first, letter[j])))
+                printf("%7d%3s", L_table[make_pair(it_table->first, letter[j])], "|");
+            else printf("%10s", "|");
+        }
+        puts("");
+        for (int i = 0; i <= (int) (letter.size() + 1) * 10; i++)
+            printf("-");
+        puts("");
+    }
+}
+
+//生成带翻译文法的Right集
+void new_Right() {
+    for (int i = 0; i < (int) Right.size(); i++) {
+        for (int j = 0; j < (int) Right[i].size(); j++) {
+            if (Right[i][j] == 'i' && Right[i][j + 1] != 'f')Right[i].insert(j + 1, "P");
+            else if (Right[i][j] == '+') {
+                Right[i].insert(j + 2, "{+}");
+                j = j + 4;
+            } else if (Right[i][j] == '-') {
+                Right[i].insert(j + 2, "{-}");
+                j = j + 4;
+            } else if (Right[i][j] == '*') {
+                Right[i].insert(j + 2, "{*}");
+                j = j + 4;
+            } else if (Right[i][j] == '/') {
+                Right[i].insert(j + 2, "{/}");
+                j = j + 4;
+            } else if (Right[i][j] == '=') {
+                Right[i].insert(j + 2, "{=}");
+                j = j + 4;
+            } else if (Right[i][j] == 'if') {
+                int idx = Right[i].find(')', j);
+                Right[i].insert(idx + 1, "{IF}");
+                j = idx + 4;
+            }
+        }
+    }
+}
+
+typedef struct {
+    string Operator;
+    string Operand1;
+    string Operand2;
+    string result;
+} QT_str;
+
+string rec_str;
+stack <string> SEM;
+stack <QT_str> QT;
+int QT_cnt = 1;
+
+
+//输出分析过程前部
+void print_front(int steps, stack <string> stk, string x, string w) {
+    printf("%-5d", steps);
+    string out = "";
+    while (!stk.empty()) {
+        out = stk.top() + out;
+        stk.pop();
+    }
+    printf("%-25s", out.c_str());
+    printf("%-5s", x.c_str());
+    printf("%-5s", w.c_str());
+}
+
+//输出分析过程后部
+void print_end(string wf, stack <string> SEM_temp, stack <QT_str> QT_temp) {
+    printf("%-20s", wf.c_str());
+    string out2 = "";
+    while (!SEM_temp.empty()) {
+        out2 = SEM_temp.top() + out2;
+        SEM_temp.pop();
+    }
+    printf("%-20s", out2.c_str());
+    QT_str qt;
+    if (!QT_temp.empty()) {
+        qt = QT_temp.top();
+        cout << "(" << qt.Operator << "," << qt.Operand1 << "," << qt.Operand2 << "," << qt.result << ")";
+    }
+    cout << endl;
+}
+
+//生成四元式
+void GEQ(string oper) {
+    string oper2 = SEM.top();
+    SEM.pop();
+    string oper1 = SEM.top();
+    SEM.pop();
+    QT_str Q_str;
+    string str = to_string(QT_cnt);
+    if (oper == "=") {
+        Q_str.Operator = oper;
+        Q_str.Operand1 = oper2;
+        Q_str.Operand2 = "_";
+        Q_str.result = oper1;
+    } else if (oper == "IF") {
+        Q_str.Operator = oper;
+        Q_str.Operand1 = oper2;
+        Q_str.Operand2 = "_";
+        Q_str.result = "_";
+    } else {
+        //cout << "oper1: "<<oper1 << "oper2: " << oper2 << endl;
+        Q_str.Operator = oper;
+        Q_str.Operand1 = oper1;
+        Q_str.Operand2 = oper2;
+        Q_str.result = "t" + str;
+        SEM.push("t" + str);
+    }
+    QT.push(Q_str);
+    QT_cnt++;
+}
+
+//四元式分析过程
+void solve_QT() {
+    //printf("1111\n");
+    new_Right();
+    string w, x, front_w;
+    //NEXT(w)
+    w = stack_str.top();
+    string str_end = "#";
+    string str_$ = "$";
+    int steps = 0;
+    printf("%-5s%-25s%-5s%-5s%-20s%-20s%-20s\n", "步骤", "符号栈", "x", "w", "所用产生式", "SEM[m]", "QT");
+    while (!s_solve.empty()) {
+        string temp_w;
+        if (I.count(w) || c.count(w))temp_w = "i";
+        else temp_w = w;
+        string tmp = "";
+        //POP(x)
+        x = s_solve.top();
+        print_front(steps++, s_solve, x, w);
+        s_solve.pop();
+        //x属于Vt
+        if (Vt.count(x)) {
+            //x=w?
+            if (x == temp_w) {
+                //NEXT(w)
+                front_w = w;
+                tmp = "NEXT(W)";
+                stack_str.pop();
+                w = stack_str.top();
+            } else {
+                cout << "error" << endl;
+                break;
+            }
+        }
+            //x属于Vn?
+        else if (Left.count(x)) {
+            //查表
+            int idx = L_table[make_pair(x, temp_w)];
+            //压栈
+            //cout << "idx "<<idx << endl;
+            tmp = Right[idx];
+            for (int i = tmp.length() - 1; i >= 0; i--) {
+                if (tmp[i] == '\'') {
+                    string v = tmp.substr(i - 1, 2);
+                    //cout << "v：" << v << endl;
+                    s_solve.push(v);
+                    i = i - 1;
+                } else if (tmp[i] == '}') {
+                    string v = tmp.substr(i - 2, 3);
+                    s_solve.push(v);
+                    i = i - 2;
+                } else {
+                    string v = tmp.substr(i, 1);
+                    // << "v：" << v << endl;
+                    if (v != str_$)s_solve.push(v);
+                }
+            }
+            tmp = Left_fan[idx] + "->" + tmp;
+        } else if (x == "P") {
+            SEM.push(front_w);
+        } else if (x == "{+}" || x == "{-}" || x == "{*}" || x == "{/}" || x == "{=}" || x == "{IF}") {
+            string temp_GEQ;
+            for (int i = 0; i < (int) x.size(); i++) {
+                if (x[i] != '{' && x[i] != '}') {
+                    temp_GEQ.push_back(x[i]);
+                    //cout << temp_GEQ << endl;
+                    //system("pause");
+                }
+            }
+            //temp_GEQ.push_back(x[1]);
+            GEQ(temp_GEQ);
+        } else if (w == str_end) {
+            cout << "succeed" << endl;
+            break;
+        } else {
+            cout << "error" << endl;
+            break;
+        }
+        //print(steps++, s_solve, x, w, tmp, SEM, QT);
+        print_end(tmp, SEM, QT);
+    }
+}
+/*
 void test_fout() {   //打印四元式
     //get_fout();
     cout << "四元式如下:" << endl;
     for (int i = 0; i < fout_size; i++) {
         cout << "( " << fout[i].op << " " << fout[i].s1 << " " << fout[i].s2 << " " << fout[i].res << " )" << endl;
     }
-}
+}*/
 
 bool match(string x, string word) {   //判断x和word是否是同种单词（例如+与w0是同种单词）
     int is_word(string);
@@ -139,111 +290,8 @@ bool match(string x, string word) {   //判断x和word是否是同种单词（例如+与w0是同
            ((x == "w0") && (word == "+" || word == "-")) || ((x == "w1") && (word == "*" || word == "/"));
 }
 
-string FindList(string s1, string s2) {   //查ll(1)分析表
-    for (int i = 0; i < List_size; i++) {
-        if (List[i].s1 == s1 && match(List[i].s2, s2)) return List[i].ans;
-    }
-    return "";
+void ll1(){
+    make_table();
+
+
 }
-
-
-void judge2() {   //ll(1)分析法判断句子是否合法
-    int is_word(string);
-    cout << "LL(1)分析法" << endl;
-    sentence = "";
-    char ch;
-    while ((ch = getchar()) != '#') sentence += ch;
-    sentence += "#";         //将待识别的句子先读进来
-    cout << sentence << endl;
-    pos = 0;
-
-    string x;
-    stack<string> sta;   //分析栈
-    sta.push("#");
-    sta.push("E");
-    jmp1:   //标记位置便于后续跳转
-    Next();
-    jmp2:
-    x = sta.top();
-    sta.pop();
-    cout << "w: " << word << " ";
-    cout << "x: " << x << " ";
-
-    if (x[0] == 'P') {   //当前栈顶为PUSH(i)
-        cout << endl;
-        sem.push_back(x.substr(6));
-        goto jmp2;
-    }
-    if (x[0] == 'G') {  //当前栈顶为GEQ()
-        cout << endl;
-        string s2 = sem.back();
-        sem.pop_back();
-        string s1 = sem.back();
-        sem.pop_back();
-        fout[fout_size].s2 = s2;
-        fout[fout_size].s1 = s1;
-        fout[fout_size].op = x.substr(5);
-        //fout[fout_size].res = "t";
-        string xuhao = "";
-        std::stringstream sstemp;
-        sstemp << fout_size;
-        xuhao = sstemp.str();
-        fout[fout_size].res = "t" + xuhao;
-        sem.push_back(fout[fout_size].res);
-        fout_size++;
-        goto jmp2;
-    }
-
-    if (judge_vt(x)) {  //当前单词是终结符，与栈顶进行匹配
-        if (match(x, word)) {
-            cout << "匹配: " << word << endl;
-            goto jmp1;
-        } else {  //若无法匹配，则说明语句不合法，输出错误信息
-            cout << "Error1" << endl;
-            return;
-        }
-    } else if (judge_vn(x)) {   //当前单词是非终结符，逆序压栈
-        string tmp = FindList(x, word);
-        cout << "逆序压栈: " << tmp << endl;
-        if (tmp != "") {
-            int len = tmp.size();
-            string ww = "";
-            for (int i = len - 1; i >= 0; i--) {
-                if (tmp[i] == ' ') continue;
-                ww = tmp[i] + ww;
-                //cout << ww << 1 << endl;
-                if (ww == "T" && i != 0) {   //将对应的语义动作入栈
-                    string ss = "GEQ()" + word;
-                    sta.push(ss);
-                }
-                if (ww == "F" && i != 0) {//将对应的语义动作入栈
-                    string ss = "GEQ()" + word;
-                    sta.push(ss);
-                }
-                if (ww == "I") {//将对应的语义动作入栈
-                    string ss = "PUSH()" + word;
-                    sta.push(ss);
-                }
-                if ((judge_vt(ww) || judge_vn(ww)) && ww != "@") {  //逆序入栈的过程
-                    //cout << ww << endl;
-                    sta.push(ww);
-                    ww = "";
-                }
-            }
-            goto jmp2;
-        } else {   //未找到分析表对应内容，不合法，输出错误信息
-            cout << "Error2" << endl;
-            return;
-        }
-
-    } else if (x == "#") {  //当前栈顶为终结符'#'
-        cout << endl;
-        if (word == "#")
-            cout << "该句子是文法的合法语句" << endl;
-        else
-            cout << "该句子不是文法的合法语句" << endl;
-        return;
-    }
-}
-
-
