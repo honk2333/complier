@@ -7,7 +7,7 @@
 using namespace std;
 #ifndef CLION_COMPLIER_H
 #define CLION_COMPLIER_H
-const int maxn=1000;
+const int maxn = 1000;
 struct production {  //产生式结构体
     string li;
     string ri[100];
@@ -21,6 +21,8 @@ struct token {   //token序列结构体
     int id;
     char group;
 };
+
+int is_word(string);
 
 void pre_grammer();
 

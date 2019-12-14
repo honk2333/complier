@@ -242,13 +242,13 @@ void Init() { //初始化关键词表,出现在关键词表中的单词就是关键字
 }
 
 int is_word(string word) {  //用于语法分析器,返回当前单词类别
-    for (int i = 0; i < len_a; i++) {  //常数
+    for (int i = 0; i < len_a; i++) {  //标志符
         if (a[i] == word) return 1;
     }
     for (int i = 0; i < len_C; i++) {
         if (C[i] == word) return 4;
     }
-    for (int i = 0; i < len_c; i++) {  //标志符
+    for (int i = 0; i < len_c; i++) {
         if (c[i] == word) return 2;
     }
     for (int i = 0; i < len_p; i++) {
@@ -256,6 +256,9 @@ int is_word(string word) {  //用于语法分析器,返回当前单词类别
     }
     for (int i = 0; i < len_s; i++) {
         if (s[i] == word) return 5;
+    }
+    for (int i = 0; i < len_k; i++) {
+        if (k[i] == word) return 7;
     }
     if (word == "#") return 3;
     return -1;

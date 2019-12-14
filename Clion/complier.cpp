@@ -8,7 +8,7 @@ using namespace std;
 int main() {
     pre_grammer();
     get_token();
-    test_synbl();
+    //test_synbl();
     ll1();
     return 0;
 }
