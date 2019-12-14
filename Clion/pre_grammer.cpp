@@ -1,21 +1,14 @@
 #include"complier.h"
 
 using namespace std;
-const int maxn = 1e2;
-struct production {  //产生式结构体
-    string li;
-    string ri[100];
-    set<string> first[100];
-    set<string> follow;
-    set<string> select[100];
-    int size;
-} p[maxn], np[maxn];//p是从文件中读入的文法,np是消除左递归后的文法
+
+struct production np[maxn], p[maxn];//p是从文件中读入的文法,np是消除左递归后的文法
 int cnt = 0;
 int dnt = 0;
 
 int vt_size = 11;
 int vn_size = 9;
-string vt[maxn] = {"w0", "w1", "ID", "CONS", "(", ")", "if", "else", "while", ";", "@"}; //终结符集合
+string vt[maxn] = {"w0", "w1", "id", "cons", "(", ")", "if", "else", "while", ";", "@"}; //终结符集合
 string vn[maxn] = {"S", "EVA_SENTENCE", "SEL_SENTENCE", "ITE_SENTENCE", "F", "T", "T'", "E",
                    "E'"}; //非终结符集合
 bool judge_vt(string c) {  //判断一个单词是否是终结符

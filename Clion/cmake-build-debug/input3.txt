@@ -1,7 +1,7 @@
-S -> EVA_SENTENCE ; | SEL_SENTENCE ; | ITE_SENTENCE ;
+S -> EVA_SENTENCE ; | SEL_SENTENCE | ITE_SENTENCE | DEF_SENTENCE ; | JMP_SENTENCE ;
 SEL_SENTENCE -> if ( E ) S else S | if ( E ) S
 ITE_SENTENCE -> while ( E ) S
-EVA_SENTENCE -> ID = E
+EVA_SENTENCE -> id = E
 E -> T | E w0 T
 T -> F | T w1 F
-F -> ID | CONS | ( E )
+F -> id | cons | ( E )

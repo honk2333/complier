@@ -4,10 +4,14 @@
 CMakeFiles/Clion.dir/complier.cpp.obj: ../complier.cpp
 CMakeFiles/Clion.dir/complier.cpp.obj: ../complier.h
 
+CMakeFiles/Clion.dir/grammer.cpp.obj: ../complier.h
+CMakeFiles/Clion.dir/grammer.cpp.obj: ../grammer.cpp
+
 CMakeFiles/Clion.dir/pre_grammer.cpp.obj: ../complier.h
 CMakeFiles/Clion.dir/pre_grammer.cpp.obj: ../pre_grammer.cpp
 
 CMakeFiles/Clion.dir/synbl.cpp.obj: ../synbl.cpp
 
+CMakeFiles/Clion.dir/token.cpp.obj: ../complier.h
 CMakeFiles/Clion.dir/token.cpp.obj: ../token.cpp
 

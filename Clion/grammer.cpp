@@ -2,11 +2,15 @@
 // Created by Honk on 2019/11/28.
 //
 
-#include"grammer.h"
+#include"complier.h"
+
+using namespace std;
+
 /*
 string sentence;  //要处理的句子
 string word;  //当前单词
 int pos;//下一个单词的起始位置*/
+
 /*
 void Next() {   //下一个单词
     int is_word(string);
@@ -26,7 +30,6 @@ void Next() {   //下一个单词
     return;
 }*/
 
-
 /*struct fouryuan {   //四元式结构体
     string s1;
     string s2;
@@ -36,28 +39,57 @@ void Next() {   //下一个单词
 int fout_size = 0;  //四元式数量
 vector <string> sem;*/
 
-
+extern production np[], p[];
+extern int cnt, dnt;
+extern int vt_size;
+extern string vt[];
 map<pair<string, string>, int> L_table;
+map<int, set<string>> select;
+map<int, string> Left_fan;
+map<string, int> Vt; //终结符
+map<string, int> Left;  //可做非终结符
+
+void convert_for_table() {
+    int ccnt = 0;
+    for (int i = 0; i < dnt; i++) {  //给产生式标号
+        for (int j = 0; j < np[i].size; j++) {
+            np[i].id[j] = ccnt++;
+        }
+    }
+    for (int i = 0; i < dnt; i++) {  //改变select集数据结构
+        for (int j = 0; j < np[i].size; j++) {
+            select[np[i].id[j]] = np[i].select[j];
+            Left_fan[np[i].id[j]] = np[i].li;
+        }
+        Left[np[i].li] = i;
+    }
+/*    for (int i = 0; i < ccnt; i++) {
+        for (auto it = select[i].begin(); it != select[i].end(); it++)
+            cout << (*it) << endl;
+    }*/
+    for (int i = 0; i < vt_size; i++) {
+        Vt[vt[i]] = i;
+    }
+};
+
 
 //生成分析表
 void make_table() {
+    convert_for_table();
     cout << "\n分析表\n\n";
-    map < int, set < string >> ::iterator
-    it = select.begin();
+    map<int, set<string >>::iterator
+            it = select.begin();
     for (; it != select.end(); it++) {
         string left_str;
         left_str = Left_fan[it->first];
-        set <string> &temp = it->second;
+        set<string> &temp = it->second;
         set<string>::iterator itl = temp.begin();
         for (; itl != temp.end(); itl++) {
             L_table[make_pair(left_str, *itl)] = it->first;
         }
     }
-    for(int i=0;i<dnt;i++){
-
-    }
-    set <string> visi_table;
-    vector <string> letter;
+    set<string> visi_table;
+    vector<string> letter;
     map<string, int>::iterator it_Vt = Vt.begin();
     for (; it_Vt != Vt.end(); it_Vt++) {
         letter.push_back(it_Vt->first);
@@ -89,6 +121,20 @@ void make_table() {
             printf("-");
         puts("");
     }
+}
+
+vector<string> Right;
+stack<string> s_solve;
+stack<string> stack_str;
+extern struct token token[];
+
+void convert_for_ll1() {
+    for (int i = 0; i < dnt; i++) {
+        for (int j = 0; j < np[i].size; j++) {
+            Right.push_back(np[i].ri[j]);
+        }
+    }
+
 }
 
 //生成带翻译文法的Right集
@@ -128,13 +174,13 @@ typedef struct {
 } QT_str;
 
 string rec_str;
-stack <string> SEM;
-stack <QT_str> QT;
+stack<string> SEM;
+stack<QT_str> QT;
 int QT_cnt = 1;
 
 
 //输出分析过程前部
-void print_front(int steps, stack <string> stk, string x, string w) {
+void print_front(int steps, stack<string> stk, string x, string w) {
     printf("%-5d", steps);
     string out = "";
     while (!stk.empty()) {
@@ -147,7 +193,7 @@ void print_front(int steps, stack <string> stk, string x, string w) {
 }
 
 //输出分析过程后部
-void print_end(string wf, stack <string> SEM_temp, stack <QT_str> QT_temp) {
+void print_end(string wf, stack<string> SEM_temp, stack<QT_str> QT_temp) {
     printf("%-20s", wf.c_str());
     string out2 = "";
     while (!SEM_temp.empty()) {
@@ -193,6 +239,12 @@ void GEQ(string oper) {
     QT_cnt++;
 }
 
+extern map<string, int> II;
+extern map<string, int> CC;    //c字符
+extern map<string, int> SS;    //S字符串
+extern map<string, int> cc;    //c常数
+extern map<string, int> KK;    //k关键字
+extern map<string, int> pp;    //p界符
 //四元式分析过程
 void solve_QT() {
     //printf("1111\n");
@@ -206,7 +258,7 @@ void solve_QT() {
     printf("%-5s%-25s%-5s%-5s%-20s%-20s%-20s\n", "步骤", "符号栈", "x", "w", "所用产生式", "SEM[m]", "QT");
     while (!s_solve.empty()) {
         string temp_w;
-        if (I.count(w) || c.count(w))temp_w = "i";
+        if (II.count(w) || cc.count(w))temp_w = "i";
         else temp_w = w;
         string tmp = "";
         //POP(x)
@@ -275,6 +327,7 @@ void solve_QT() {
         print_end(tmp, SEM, QT);
     }
 }
+
 /*
 void test_fout() {   //打印四元式
     //get_fout();
@@ -290,8 +343,7 @@ bool match(string x, string word) {   //判断x和word是否是同种单词（例如+与w0是同
            ((x == "w0") && (word == "+" || word == "-")) || ((x == "w1") && (word == "*" || word == "/"));
 }
 
-void ll1(){
+void ll1() {
     make_table();
-
 
 }

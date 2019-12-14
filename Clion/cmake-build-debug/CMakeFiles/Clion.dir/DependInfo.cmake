@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "C:/Users/Honk/Desktop/sources/C++/Clion/complier.cpp" "C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/Clion.dir/complier.cpp.obj"
+  "C:/Users/Honk/Desktop/sources/C++/Clion/grammer.cpp" "C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/Clion.dir/grammer.cpp.obj"
   "C:/Users/Honk/Desktop/sources/C++/Clion/pre_grammer.cpp" "C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/Clion.dir/pre_grammer.cpp.obj"
   "C:/Users/Honk/Desktop/sources/C++/Clion/synbl.cpp" "C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/Clion.dir/synbl.cpp.obj"
   "C:/Users/Honk/Desktop/sources/C++/Clion/token.cpp" "C:/Users/Honk/Desktop/sources/C++/Clion/cmake-build-debug/CMakeFiles/Clion.dir/token.cpp.obj"

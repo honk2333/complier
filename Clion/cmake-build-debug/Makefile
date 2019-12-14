@@ -149,6 +149,33 @@ complier.cpp.s:
 	$(MAKE) -f CMakeFiles\Clion.dir\build.make CMakeFiles/Clion.dir/complier.cpp.s
 .PHONY : complier.cpp.s
 
+grammer.obj: grammer.cpp.obj
+
+.PHONY : grammer.obj
+
+# target to build an object file
+grammer.cpp.obj:
+	$(MAKE) -f CMakeFiles\Clion.dir\build.make CMakeFiles/Clion.dir/grammer.cpp.obj
+.PHONY : grammer.cpp.obj
+
+grammer.i: grammer.cpp.i
+
+.PHONY : grammer.i
+
+# target to preprocess a source file
+grammer.cpp.i:
+	$(MAKE) -f CMakeFiles\Clion.dir\build.make CMakeFiles/Clion.dir/grammer.cpp.i
+.PHONY : grammer.cpp.i
+
+grammer.s: grammer.cpp.s
+
+.PHONY : grammer.s
+
+# target to generate assembly for a file
+grammer.cpp.s:
+	$(MAKE) -f CMakeFiles\Clion.dir\build.make CMakeFiles/Clion.dir/grammer.cpp.s
+.PHONY : grammer.cpp.s
+
 pre_grammer.obj: pre_grammer.cpp.obj
 
 .PHONY : pre_grammer.obj
@@ -242,6 +269,9 @@ help:
 	@echo ... complier.obj
 	@echo ... complier.i
 	@echo ... complier.s
+	@echo ... grammer.obj
+	@echo ... grammer.i
+	@echo ... grammer.s
 	@echo ... pre_grammer.obj
 	@echo ... pre_grammer.i
 	@echo ... pre_grammer.s
