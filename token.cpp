@@ -2,10 +2,9 @@
 // Created by Honk on 2019/11/28.
 //
 
-#include<bits/stdc++.h>
+#include"complier.h"
 
 using namespace std;
-const int maxn = 1e3;
 
 string a[maxn];   //±äÁ¿
 int len_a;
@@ -19,11 +18,14 @@ string k[maxn];   //¹Ø¼ü×Ö
 int len_k;
 string p[maxn];    //½ç·û
 int len_p;
-struct token {   //tokenĞòÁĞ½á¹¹Ìå
-    int id;
-    char group;
-} token[maxn];
+struct token token[maxn];
 
+map<string, int> II;
+map<string, int> CC;    //c×Ö·û
+map<string, int> SS;    //S×Ö·û´®
+map<string, int> cc;    //c³£Êı
+map<string, int> KK;    //k¹Ø¼ü×Ö
+map<string, int> pp;    //p½ç·û
 
 int state_change(int state, char ch) {   //×´Ì¬×ªÒÆº¯Êı,¸ºÊı×´Ì¬´ú±íÖÕÖ¹Ì¬,ÕıÊı×´Ì¬´ú±í·ÇÖÕÖ¹Ì¬
     //-1´ú±í±äÁ¿»ò¹Ø¼ü×Ö(ºóÃæÔÙ½øÒ»²½Çø·Ö),-2´ú±í³£Êı,-3´ú±í×Ö·û´®,-4´ú±í×Ö·û,-6´ú±í½ç·û
@@ -170,6 +172,7 @@ int Findid(char group, string word) {  //¸ù¾İµ¥´ÊÀà±ğ,²éÕÒµ¥´ÊÊÇ·ñÒÑ¾­³öÏÖ¹ı,Èç¹
                 return i;
             }
         }
+        cc[word] = len_C;  //×Ö·û
         C[len_C++] = word;
         return len_C - 1;
     }
@@ -179,6 +182,7 @@ int Findid(char group, string word) {  //¸ù¾İµ¥´ÊÀà±ğ,²éÕÒµ¥´ÊÊÇ·ñÒÑ¾­³öÏÖ¹ı,Èç¹
                 return i;
             }
         }
+        SS[word] = len_s;
         s[len_s++] = word;
         return len_s - 1;
     }
@@ -188,6 +192,7 @@ int Findid(char group, string word) {  //¸ù¾İµ¥´ÊÀà±ğ,²éÕÒµ¥´ÊÊÇ·ñÒÑ¾­³öÏÖ¹ı,Èç¹
                 return i;
             }
         }
+        CC[word] = len_c;
         c[len_c++] = word;
         return len_c - 1;
     }
@@ -197,6 +202,7 @@ int Findid(char group, string word) {  //¸ù¾İµ¥´ÊÀà±ğ,²éÕÒµ¥´ÊÊÇ·ñÒÑ¾­³öÏÖ¹ı,Èç¹
                 return i;
             }
         }
+        pp[word] = len_p;
         p[len_p++] = word;
         return len_p - 1;
     }
@@ -206,6 +212,7 @@ int Findid(char group, string word) {  //¸ù¾İµ¥´ÊÀà±ğ,²éÕÒµ¥´ÊÊÇ·ñÒÑ¾­³öÏÖ¹ı,Èç¹
                 return i;
             }
         }
+        II[word] = len_a;
         a[len_a++] = word;
         return len_a - 1;
     }
@@ -222,17 +229,26 @@ void Init() { //³õÊ¼»¯¹Ø¼ü´Ê±í,³öÏÖÔÚ¹Ø¼ü´Ê±íÖĞµÄµ¥´Ê¾ÍÊÇ¹Ø¼ü×Ö
     k[7] = "return";
     k[8] = "double";
     // k[9] = "include";
+    KK["int"] = 0;
+    KK["main"] = 1;
+    KK["void"] = 2;
+    KK["if"] = 3;
+    KK["else"] = 4;
+    KK["char"] = 5;
+    KK["while"] = 6;
+    KK["return"] = 7;
+    KK["double"] = 8;
     len_k = 9;
 }
 
 int is_word(string word) {  //ÓÃÓÚÓï·¨·ÖÎöÆ÷,·µ»Øµ±Ç°µ¥´ÊÀà±ğ
-    for (int i = 0; i < len_a; i++) {  //³£Êı
+    for (int i = 0; i < len_a; i++) {  //±êÖ¾·û
         if (a[i] == word) return 1;
     }
     for (int i = 0; i < len_C; i++) {
         if (C[i] == word) return 4;
     }
-    for (int i = 0; i < len_c; i++) {  //±êÖ¾·û
+    for (int i = 0; i < len_c; i++) {
         if (c[i] == word) return 2;
     }
     for (int i = 0; i < len_p; i++) {
@@ -241,11 +257,14 @@ int is_word(string word) {  //ÓÃÓÚÓï·¨·ÖÎöÆ÷,·µ»Øµ±Ç°µ¥´ÊÀà±ğ
     for (int i = 0; i < len_s; i++) {
         if (s[i] == word) return 5;
     }
+    for (int i = 0; i < len_k; i++) {
+        if (k[i] == word) return 7;
+    }
     if (word == "#") return 3;
     return -1;
 }
 
-int get_token() {
+void get_token() {
     freopen("test.txt", "r", stdin);
     Init();
     //freopen("output.txt","w",stdout);
@@ -356,7 +375,6 @@ int get_token() {
                 cout << word << endl;
                 token[cnt].group = Findgroup(state, word);
                 token[cnt].id = Findid(token[cnt].group, word);
-
                 cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
                 cnt++;
             }
@@ -384,6 +402,7 @@ int get_token() {
             state = 1;
         }
     }
+
     printf("µ¥´Ê±íÈçÏÂ£º-----------------------\n");   //´òÓ¡µ¥´Ê±í
     for (int i = 0; i < len_a; i++) {
         cout << i << " " << "a±êÖ¾·û " << a[i] << endl;;
@@ -403,5 +422,8 @@ int get_token() {
     for (int i = 0; i < len_p; i++) {
         cout << i << " " << "p½ç·û " << p[i] << endl;;
     }
-    return 0;
+    for (int i = 0; i < len_a; i++) {
+        add_synbl(a[i]);  //Ìî·ûºÅ±í
+    }
+
 }

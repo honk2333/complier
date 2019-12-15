@@ -2,24 +2,30 @@
 // Created by Honk on 2019/12/10.
 //
 #include<bits/stdc++.h>
+
 using namespace std;
-const int maxn=1e3;
-struct type {  //ç±»å‹è¡¨
-    char tval;  //ç±»å‹ä»£ç 
-    string tpoint;//æŒ‡é’ˆ
+const int maxn = 1e3;
+struct type {  //ÀàĞÍ±í
+    char tval;  //ÀàĞÍ´úÂë
+    string tpoint;//Ö¸Õë
 } type[maxn];
-struct synbl {   //ç¬¦å·è¡¨æ€»è¡¨
-    string name;  //åå­—
-    struct type type;  //ç±»å‹
-    string cat;  //ç§ç±»
-    int addr; //åœ°å€
+struct synbl {   //·ûºÅ±í×Ü±í
+    string name;  //Ãû×Ö
+    struct type type;  //ÀàĞÍ
+    string cat;  //ÖÖÀà
+    int addr; //µØÖ·
 } synbl[maxn];
 int synbl_size = 0;
-int llen[maxn];//é•¿åº¦è¡¨
-int cconst[maxn];//å¸¸æ•°è¡¨
-void get_synal(){
-    void Next();
-    freopen("test.cpp","r",stdin);
-    //Next();
-    //if(word==)
+int llen[maxn];//³¤¶È±í
+int cconst[maxn];//³£Êı±í
+
+void add_synbl(string name) {
+    synbl[synbl_size++].name = name;
+}
+
+void test_synbl() {
+    cout << "µ±Ç°·ûºÅ±íÈçÏÂ:" << endl;
+    for (int i = 0; i < synbl_size; i++) {
+        cout << i << " " << synbl[i].name << " " << synbl[i].cat << " " << synbl[i].addr << endl;
+    }
 }
