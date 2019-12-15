@@ -6,10 +6,32 @@ struct production np[maxn], pron[maxn];//pÊÇ´ÓÎÄ¼þÖÐ¶ÁÈëµÄÎÄ·¨,npÊÇÏû³ý×óµÝ¹éºóµ
 int cnt = 0;
 int dnt = 0;
 
-int vt_size = 15;
-int vn_size = 9;
-string vt[maxn] = {"w0", "w1", "=", "id", "cons", "(", ")", "{", "}", "if", "else", "while", ";", "@", "while"}; //ÖÕ½á·û¼¯ºÏ
-string vn[maxn] = {"S", "EVA_SENTENCE", "SEL_SENTENCE", "ITE_SENTENCE", "F", "E", "T", "T'", "E'"}; //·ÇÖÕ½á·û¼¯ºÏ
+int vt_size = 5;
+int vn_size = 12;
+string vt[maxn] = {"w0", "w1", "id", "cons", "@"}; //ÖÕ½á·û¼¯ºÏ
+string vn[maxn] = {"MAINPRO", "S_LIST", "TYPE", "S", "EVA_SENTENCE", "SEL_SENTENCE", "ITE_SENTENCE", "F", "E", "T",
+                   "T'",
+                   "E'"}; //·ÇÖÕ½á·û¼¯ºÏ
+bool Find(string s) {
+    for (int i = 0; i < vt_size; i++) {
+        if (vt[i] == s) return true;
+    }
+    return false;
+}
+
+void Union() {   //Í¨¹ý´Ê·¨·ÖÎöÆ÷À´À©³äÖÕ½á·û±í
+    extern string k[maxn];   //¹Ø¼ü×Ö
+    extern int len_k;
+    extern string p[maxn];    //½ç·û
+    extern int len_p;
+    for (int i = 0; i < len_k; i++) {
+        if (!Find(k[i])) vt[vt_size++] = k[i];
+    }
+    for (int i = 0; i < len_p; i++) {
+        if (!Find(p[i])) vt[vt_size++] = p[i];
+    }
+    cout << vt_size << endl;
+}
 
 bool judge_vt(string c) {  //ÅÐ¶ÏÒ»¸öµ¥´ÊÊÇ·ñÊÇÖÕ½á·û
     for (int i = 0; i < vt_size; i++) {
@@ -85,12 +107,15 @@ void Left_Recursion() {  //ÅÐ¶ÏÓÐÎÞ×óµÝ¹é²¢Ïû³ý×óµÝ¹é
                             left = pron[i].ri[l];   //ss´æ²»º¬ÓÐ×óµÝ¹éµÄ²úÉúÊ½
                             cout << pron[i].li << " -> ";
                             int len = pron[i].ri[j].length();
-                            cout << left + " {" + pron[i].ri[j].substr(1, len - 1) + " }" << endl;
+                            string tmp = pron[i].ri[j].substr(ri_first.size());
+                            //cout << tmp << endl;
+                            cout << left + " {" + tmp + " }" << endl;
                             np[dnt].li = pron[i].li;
                             np[dnt].ri[np[dnt].size++] = left + " " + np[dnt].li + "\'";
                             dnt++;
                             np[dnt].li = np[dnt - 1].li + "\'";
-                            np[dnt].ri[np[dnt].size++] = pron[i].ri[j].substr(2, len - 1) + " " + np[dnt].li;
+                            np[dnt].ri[np[dnt].size++] =
+                                    pron[i].ri[j].substr(ri_first.size() + 1, len - 1) + " " + np[dnt].li;
                             np[dnt].ri[np[dnt].size++] = "@"; //¿Õ
                             dnt++;
                             break;
@@ -224,35 +249,6 @@ void test_first() {
 }
 
 
-/*bool generate_can_noempty(string ri) {
-    //int len=ri.size();
-    stringstream ss(ri);
-    string ww;
-    while (ss >> ww) {
-        //cout << ww << endl;
-        if (judge_vt(ww) && ww != "@") {
-            return true;
-        } else if (judge_vn(ww)) {
-            bool tag = false;
-            for (int i = 0; i < dnt; i++) {
-                if (tag) break;
-                if (np[i].li == ww) {
-                    for (int j = 0; j < np[i].size; j++) {
-                        if (generate_can_noempty(np[i].ri[j])) {
-                            tag = true;
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-            if (tag) continue;
-            else return false;
-        }
-    }
-    return true;
-}*/
-
 bool follow_vis[maxn];
 int nowid; //·ÀÖ¹ËÀÑ­»·ÓÃ
 //Éú³Éfollow¼¯
@@ -263,64 +259,73 @@ set<string> make_follow(int id, string left_head) {
     for (int i = 0; i < dnt; i++) {
         string left_str = np[i].li;
         for (int j = 0; j < np[i].size; j++) {
-            int idx = np[i].ri[j].find(left_head, 0);   //ÏÂ±ê
-            if (idx != np[i].ri[j].npos) {
-                if (idx > 0 && np[i].ri[j][idx - 1] != ' ') idx = (int) np[i].ri[j].npos;
-                if (idx + left_head.size() < np[i].ri[j].size() && np[i].ri[j][idx + left_head.size()] != ' ')
-                    idx = (int) np[i].ri[j].npos;
-                if (np[i].ri[j][idx + 1] == '\'' && left_head[left_head.size() - 1] != '\'')
-                    idx = (int) np[i].ri[j].npos;
-            }
-            //²éµ½
-            //cout <<"idx"<< idx << endl;
-            if (idx != np[i].ri[j].npos) {
-                //cout << "left_head" << left_head << "  np[i].ri[j]" << np[i].ri[j] << "  idx" << idx << endl;
-                //²éÏÂÒ»×Ö·û
-                //Ã»×Ö·û
-                if (idx + left_head.size() == np[i].ri[j].length()) {
-                    if (left_head != np[i].li && nowid != i) {
-                        set<string> temp;
-                        //cout << "no word:" << left_str << endl;
-                        temp = make_follow(i, left_str);  //µ¥´ÊÄ©Î²,¼ÓÉÏ¸Ã²úÉúÊ½µÄfollow(li);
-                        set<string>::iterator it = temp.begin();
-                        for (; it != temp.end(); it++) {
-                            np[i].follow.insert(*it);
-                            np[id].follow.insert(*it);
-                        }
+            int start = 0;
+            int idx;
+            while (start != np[i].ri[j].npos && (idx = np[i].ri[j].find(left_head, start)) != np[i].ri[j].npos) {
+                {//ÏÂ±ê
+                    if (idx > 0 && np[i].ri[j][idx - 1] != ' ') {
+                        idx = (int) np[i].ri[j].npos;
+                        break;
                     }
-                } else {
-                    string tmp = np[i].ri[j].substr(idx + left_head.size());
-                    stringstream ss(tmp);
-                    string right_next;
-                    ss >> right_next;
-                    //int right_next_idx=
-                    if (judge_vt(right_next)) np[id].follow.insert(right_next);
-                        //cout << right_next << endl;
-                    else {
-                        if (generate_empty(tmp)) {  //ÓÒ²¿·ûºÅ´®¿ÉÒÔÎª¿Õ
+                    if (idx + left_head.size() < np[i].ri[j].size() && np[i].ri[j][idx + left_head.size()] != ' ') {
+                        idx = (int) np[i].ri[j].npos;
+                        break;
+                    }
+                    if (np[i].ri[j][idx + 1] == '\'' && left_head[left_head.size() - 1] != '\'') {
+                        idx = (int) np[i].ri[j].npos;
+                        break;
+                    }
+                }
+                //²éµ½
+                //cout <<"idx"<< idx << endl;
+                if (idx != np[i].ri[j].npos) {
+                    //cout << "left_head" << left_head << "  np[i].ri[j]" << np[i].ri[j] << "  idx" << idx << endl;
+                    //²éÏÂÒ»×Ö·û
+                    //Ã»×Ö·û
+                    if (idx + left_head.size() == np[i].ri[j].length()) {
+                        if (left_head != np[i].li && nowid != i) {
                             set<string> temp;
-                            temp = make_follow(i, left_str);
+                            //cout << "no word:" << left_str << endl;
+                            temp = make_follow(i, left_str);  //µ¥´ÊÄ©Î²,¼ÓÉÏ¸Ã²úÉúÊ½µÄfollow(li);
                             set<string>::iterator it = temp.begin();
                             for (; it != temp.end(); it++) {
+                                np[i].follow.insert(*it);
                                 np[id].follow.insert(*it);
                             }
                         }
-                        {  //ÓÒ²¿·ûºÅ´®²»Îª¿Õ
-                            set<string> ret = First(right_next);
-                            for (auto it = ret.begin(); it != ret.end(); it++)
-                                np[id].follow.insert(*it);
-                            while (!ss.eof() && generate_empty(right_next)) { //Èç¹ûµ±Ç°×Ö·û¿ÉÒÔÎª¿Õ
-                                ss >> right_next;
-                                //cout << "ss " << tmp << endl;
-                                set<string> rett = First(right_next);
-                                for (auto it = rett.begin(); it != rett.end(); it++) {
+                    } else {
+                        string tmp = np[i].ri[j].substr(idx + left_head.size());
+                        stringstream ss(tmp);
+                        string right_next;
+                        ss >> right_next;
+                        if (judge_vt(right_next)) np[id].follow.insert(right_next);
+                            //cout << right_next << endl;
+                        else {
+                            if (generate_empty(tmp)) {  //ÓÒ²¿·ûºÅ´®¿ÉÒÔÎª¿Õ
+                                set<string> temp;
+                                temp = make_follow(i, left_str);
+                                set<string>::iterator it = temp.begin();
+                                for (; it != temp.end(); it++) {
                                     np[id].follow.insert(*it);
+                                }
+                            }
+                            {  //ÓÒ²¿·ûºÅ´®²»Îª¿Õ
+                                set<string> ret = First(right_next);
+                                for (auto it = ret.begin(); it != ret.end(); it++)
+                                    np[id].follow.insert(*it);
+                                while (!ss.eof() && generate_empty(right_next)) { //Èç¹ûµ±Ç°×Ö·û¿ÉÒÔÎª¿Õ
+                                    ss >> right_next;
+                                    //cout << "ss " << tmp << endl;
+                                    set<string> rett = First(right_next);
+                                    for (auto it = rett.begin(); it != rett.end(); it++) {
+                                        np[id].follow.insert(*it);
+                                    }
                                 }
                             }
                         }
                     }
+                    start = idx + left_head.size();
                 }
-
             }
         }
     }
@@ -396,8 +401,6 @@ void test_select() {
 }
 
 void pre_grammer() {
-    void get_token();
-
     freopen("input3.txt", "r", stdin);
     string ss;
     int start = 0;

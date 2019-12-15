@@ -5,8 +5,6 @@
 #include"complier.h"
 
 using namespace std;
-
-
 string sentence;  //要处理的句子
 string word;  //当前单词
 int pos;//下一个单词的起始位置*/
@@ -31,15 +29,6 @@ void Next() {   //下一个单词
     }
     return;
 }
-
-/*struct fouryuan {   //四元式结构体
-    string s1;
-    string s2;
-    string op;
-    string res;
-} fout[maxn * 10];
-int fout_size = 0;  //四元式数量
-vector <string> sem;*/
 
 extern production np[], pron[];
 extern int cnt, dnt;
@@ -109,9 +98,6 @@ void make_table() {
     puts("");
     map<string, int>::iterator it_table = Left.begin();
     for (; it_table != Left.end(); it_table++) {
-        //if (visi_table.count(it_table->first.first))break;
-        //visi_table.insert(it_table->first.first);
-        //cout << it_table->first.first << it_table->first.second << it_table->second << endl;
         printf("|%-14s%s", it_table->first.c_str(), "|");
         for (int j = 0; j < (int) letter.size(); j++) {
             if (L_table.count(make_pair(it_table->first, letter[j])))
@@ -155,6 +141,7 @@ void new_Right() {
                 } else if (right_next == "if") {
                     int idx = np[i].ri[j].find(')', 0);
                     np[i].ri[j].insert(idx + 1, " {IF}");
+                    np[i].ri[j].insert(np[i].ri[j].size(), " {IE}");
                 } else if (right_next == "w0") {
                     int idx = np[i].ri[j].find("w0", 0);
                     np[i].ri[j].insert(idx + right_next.size() + 2, " {w0}");
@@ -170,46 +157,63 @@ void new_Right() {
                 } else if (right_next == "else") {
                     int idx = np[i].ri[j].find("else", 0);
                     np[i].ri[j].insert(idx + right_next.size(), " {EL}");
+                } else if (right_next == "while") {
+                    int idx = np[i].ri[j].find("while", 0);
+                    np[i].ri[j].insert(idx + right_next.size(), " {WH}");
+                    np[i].ri[j].insert(np[i].ri[j].size(), " {WE}");
+                } else if (right_next == ">") {
+                    int idx = np[i].ri[j].find(">", 0);
+                    np[i].ri[j].insert(idx + right_next.size() + 2, " {>}");
+                } else if (right_next == "<") {
+                    int idx = np[i].ri[j].find("<", 0);
+                    np[i].ri[j].insert(idx + right_next.size() + 2, " {<}");
+                } else if (right_next == "<=") {
+                    int idx = np[i].ri[j].find("<=", 0);
+                    np[i].ri[j].insert(idx + right_next.size() + 2, " {<=}");
+                } else if (right_next == ">=") {
+                    int idx = np[i].ri[j].find(">=", 0);
+                    np[i].ri[j].insert(idx + right_next.size() + 2, " {>=}");
+                } else if (right_next == "==") {
+                    int idx = np[i].ri[j].find("==", 0);
+                    np[i].ri[j].insert(idx + right_next.size() + 2, " {==}");
+                } else if (right_next == "!=") {
+                    int idx = np[i].ri[j].find("!=", 0);
+                    np[i].ri[j].insert(idx + right_next.size() + 2, " {!=}");
                 }
             }
-            /*
-            if (Right[i][j] == 'i' && Right[i][j + 1] != 'f')Right[i].insert(j + 1, "P");
-            else if (Right[i][j] == '+') {
-                Right[i].insert(j + 2, "{+}");
-                j = j + 4;
-            } else if (Right[i][j] == '-') {
-                Right[i].insert(j + 2, "{-}");
-                j = j + 4;
-            } else if (Right[i][j] == '*') {
-                Right[i].insert(j + 2, "{*}");
-                j = j + 4;
-            } else if (Right[i][j] == '/') {
-                Right[i].insert(j + 2, "{/}");
-                j = j + 4;
-            } else if (Right[i][j] == '=') {
-                Right[i].insert(j + 2, "{=}");
-                j = j + 4;
-            } else if (Right[i][j] == 'i'&& Right[i][j+1] =='f') {
-                int idx = Right[i].find(')', j);
-                Right[i].insert(idx + 1, "{IF}");
-                j = idx + 4;
-            }*/
         }
     }
 }
-
-typedef struct {
-    string Operator;
-    string Operand1;
-    string Operand2;
-    string result;
-} QT_str;
 
 string rec_str;
 stack<string> SEM;
 stack<QT_str> QT;
 int QT_cnt = 1;
 
+
+vector<QT_str> QT_arr;
+
+//get QT_arr
+vector<QT_str> get_QT() {
+    stack<QT_str> QT_tmp;
+    while (!QT.empty()) {
+        QT_str qt_tmp = QT.top();
+        //cout<<"("<<qt_tmp.Operator<<","<<qt_tmp.Operand1<<","<<qt_tmp.Operand2<<","<<qt_tmp.result<<")"<<endl;
+        QT.pop();
+        QT_tmp.push(qt_tmp);
+    }
+    while (!QT_tmp.empty()) {
+        QT_str qt_tmp = QT_tmp.top();
+        QT_tmp.pop();
+        QT_arr.push_back(qt_tmp);
+    }
+    for (int i = 0; i < (int) QT_arr.size(); i++) {
+        cout << "(" << QT_arr[i].Operator << "," << QT_arr[i].Operand1 << "," << QT_arr[i].Operand2 << ","
+             << QT_arr[i].result << ")" << endl;
+
+    }
+    return QT_arr;
+}
 
 //输出分析过程前部
 void print_front(int steps, stack<string> stk, string x, string w) {
@@ -219,7 +223,7 @@ void print_front(int steps, stack<string> stk, string x, string w) {
         out = stk.top() + out;
         stk.pop();
     }
-    printf("%-25s", out.c_str());
+    printf("%-35s", out.c_str());
     printf("%-10s", x.c_str());
     printf("%-10s", w.c_str());
 }
@@ -262,7 +266,12 @@ void GEQ(string oper) {
         Q_str.Operand2 = "_";
         Q_str.result = "_";
 
-    } else if (oper == "EL") {
+    } else if (oper == "IE" || oper == "WH") {
+        Q_str.Operator = oper;
+        Q_str.Operand1 = "_";
+        Q_str.Operand2 = "_";
+        Q_str.result = "_";
+    } else if (oper == "EL" || oper == "WE") {
         Q_str.Operator = oper;
         Q_str.Operand1 = "_";
         Q_str.Operand2 = "_";
@@ -278,9 +287,10 @@ void GEQ(string oper) {
         Q_str.Operand2 = oper2;
         Q_str.result = "t" + str;
         SEM.push("t" + str);
+        QT_cnt++;
     }
     QT.push(Q_str);
-    QT_cnt++;
+    //QT_cnt_num++;
 }
 
 extern map<string, int> II;
@@ -292,12 +302,9 @@ extern map<string, int> pp;    //p界符
 string w0 = "w0";
 string w1 = "w1";
 
-bool match(string x, string word);
 
 //四元式分析过程
 void solve_QT() {
-    //printf("1111\n");
-    //new_Right();
     string w, x, front_w;
     //NEXT(w)
     freopen("test.txt", "r", stdin);
@@ -309,7 +316,7 @@ void solve_QT() {
         //putchar(ch);
     }
     sentence += '#';
-    cout << sentence << endl;
+    //cout << sentence << endl;
     Next();
     w = word;
     cout << w << endl;
@@ -318,12 +325,12 @@ void solve_QT() {
     string str_$ = "$";
     int steps = 0;
     s_solve.push("#");
-    s_solve.push("S");
-    printf("%-10s%-25s%-10s%-10s%-20s%-20s%-20s\n", "步骤", "符号栈", "x", "w", "所用产生式", "SEM[m]", "QT");
+    s_solve.push("MAINPRO");
+    printf("%-10s%-35s%-10s%-10s%-20s%-20s%-20s\n", "步骤", "符号栈", "x", "w", "所用产生式", "SEM[m]", "QT");
     while (!s_solve.empty()) {
         string temp_w;
         if (II.count(w))temp_w = "id";
-        else if (is_word(w)==2)temp_w = "cons";
+        else if (is_word(w) == 2)temp_w = "cons";
         else if (match("w0", w))temp_w = "w0";
         else if (match("w1", w))temp_w = "w1";
         else temp_w = w;
@@ -365,36 +372,22 @@ void solve_QT() {
             stringstream ss(tmp);
             string right_next;
             while (ss >> right_next) {
-                if (right_next != "@")tmp_right.push(right_next);
-
+                if (right_next == "{w0}" || right_next == "{w1}") tmp_right.push("{" + w + "}");
+                else if (right_next != "@") tmp_right.push(right_next);
             }
             while (!tmp_right.empty()) {
                 string v = tmp_right.top();
                 tmp_right.pop();
                 s_solve.push(v);
             }
-            /*
-            for (int i = tmp.length() - 1; i >= 0; i--) {
-                if (tmp[i] == '\'') {
-                    string v = tmp.substr(i - 1, 2);
-                    //cout << "v：" << v << endl;
-                    s_solve.push(v);
-                    i = i - 1;
-                } else if (tmp[i] == '}') {
-                    string v = tmp.substr(i - 2, 3);
-                    s_solve.push(v);
-                    i = i - 2;
-                } else {
-                    string v = tmp.substr(i, 1);
-                    // << "v：" << v << endl;
-                    if (v != str_$)s_solve.push(v);
-                }
-            }*/
-            //tmp = Left_fan[id] + "->" + tmp;
+
         } else if (x == "P") {
             SEM.push(front_w);
-        } else if (x == "{w0}" || x == "{w1}" || x == "{=}" || x == "{IF}" || x == "{EL}") {
+        } else if (x == "{-}" || x == "{+}" || x == "{*}" || x == "{/}" || x == "{=}" || x == "{IF}" || x == "{EL}" ||
+                   x == "{IE}" || x == "{WH}" || x == "{WE}" || x == "{>}" || x == "{<}" || x == "{>=}" ||
+                   x == "{<=}" || x == "{!=}" || x == "{==}") {
             string temp_GEQ;
+            //if (x[1] == 'w') temp_GEQ = w;
             for (int i = 0; i < (int) x.size(); i++) {
                 if (x[i] != '{' && x[i] != '}') {
                     temp_GEQ.push_back(x[i]);
@@ -416,15 +409,6 @@ void solve_QT() {
     }
 }
 
-/*
-void test_fout() {   //打印四元式
-    //get_fout();
-    cout << "四元式如下:" << endl;
-    for (int i = 0; i < fout_size; i++) {
-        cout << "( " << fout[i].op << " " << fout[i].s1 << " " << fout[i].s2 << " " << fout[i].res << " )" << endl;
-    }
-}*/
-
 bool match(string x, string word) {   //判断x和word是否是同种单词（例如+与w0是同种单词）
     int is_word(string);
     return x == word || (x == "cons" && (is_word(word) == 2)) || (x == "id" && (is_word(word) == 1)) ||
@@ -433,14 +417,14 @@ bool match(string x, string word) {   //判断x和word是否是同种单词（例如+与w0是同
 
 void ll1() {
     make_table();
-
     new_Right();
-   /* for (int i = 0; i < dnt; i++) {
-        //cout << p[i].size << endl;
-        for (int j = 0; j < np[i].size; j++) {
-            cout << np[i].li << " -> ";
-            cout << np[i].ri[j] << endl;
-        }
-    }*/
+    /*  for (int i = 0; i < dnt; i++) {
+          //cout << p[i].size << endl;
+          for (int j = 0; j < np[i].size; j++) {
+              cout << np[i].li << " -> ";
+              cout << np[i].ri[j] << endl;
+          }
+      }*/
     solve_QT();
+    get_QT();
 }
