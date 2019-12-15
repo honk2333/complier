@@ -228,6 +228,7 @@ void Init() { //初始化关键词表,出现在关键词表中的单词就是关键字
     k[6] = "while";
     k[7] = "return";
     k[8] = "double";
+    k[9] = "bool";
     // k[9] = "include";
     KK["int"] = 0;
     KK["main"] = 1;
@@ -238,7 +239,8 @@ void Init() { //初始化关键词表,出现在关键词表中的单词就是关键字
     KK["while"] = 6;
     KK["return"] = 7;
     KK["double"] = 8;
-    len_k = 9;
+    KK["bool"] = 9;
+    len_k = 10;
 }
 
 int is_word(string word) {  //用于语法分析器,返回当前单词类别

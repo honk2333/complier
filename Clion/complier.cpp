@@ -3,12 +3,15 @@
 //
 #include <bits/stdc++.h>
 #include "complier.h"
+
 using namespace std;
 
 int main() {
-    pre_grammer();
     get_token();
-    //test_synbl();
+    Union();
+    pre_grammer();
     ll1();
+    //test_synbl();
+    translate();
     return 0;
 }

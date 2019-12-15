@@ -17,10 +17,18 @@ struct production {  //产生式结构体
     int size;
     int id[100]; //产生式序号
 };
+struct QT_str {
+    string Operator;
+    string Operand1;
+    string Operand2;
+    string result;
+};
 struct token {   //token序列结构体
     int id;
     char group;
 };
+
+bool match(string x, string word);
 
 int is_word(string);
 
@@ -37,5 +45,9 @@ void test_synbl();
 bool judge_vn(string c);
 
 bool judge_vt(string c);
+
+void translate();
+
+void Union();
 
 #endif //CLION_COMPLIER_H

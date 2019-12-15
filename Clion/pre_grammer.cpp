@@ -6,10 +6,32 @@ struct production np[maxn], pron[maxn];//pÊÇ´ÓÎÄ¼þÖÐ¶ÁÈëµÄÎÄ·¨,npÊÇÏû³ý×óµÝ¹éºóµ
 int cnt = 0;
 int dnt = 0;
 
-int vt_size = 13;
-int vn_size = 9;
-string vt[maxn] = {"w0", "w1", "=", "id", "cons", "(", ")", "if", "else", "while", ";", "@", "while"}; //ÖÕ½á·û¼¯ºÏ
-string vn[maxn] = {"S", "EVA_SENTENCE", "SEL_SENTENCE", "ITE_SENTENCE", "F", "E", "T", "T'", "E'"}; //·ÇÖÕ½á·û¼¯ºÏ
+int vt_size = 5;
+int vn_size = 12;
+string vt[maxn] = {"w0", "w1", "id", "cons", "@"}; //ÖÕ½á·û¼¯ºÏ
+string vn[maxn] = {"MAINPRO", "S_LIST", "TYPE", "S", "EVA_SENTENCE", "SEL_SENTENCE", "ITE_SENTENCE", "F", "E", "T",
+                   "T'",
+                   "E'"}; //·ÇÖÕ½á·û¼¯ºÏ
+bool Find(string s) {
+    for (int i = 0; i < vt_size; i++) {
+        if (vt[i] == s) return true;
+    }
+    return false;
+}
+
+void Union() {   //Í¨¹ý´Ê·¨·ÖÎöÆ÷À´À©³äÖÕ½á·û±í
+    extern string k[maxn];   //¹Ø¼ü×Ö
+    extern int len_k;
+    extern string p[maxn];    //½ç·û
+    extern int len_p;
+    for (int i = 0; i < len_k; i++) {
+        if (!Find(k[i])) vt[vt_size++] = k[i];
+    }
+    for (int i = 0; i < len_p; i++) {
+        if (!Find(p[i])) vt[vt_size++] = p[i];
+    }
+    cout << vt_size << endl;
+}
 
 bool judge_vt(string c) {  //ÅÐ¶ÏÒ»¸öµ¥´ÊÊÇ·ñÊÇÖÕ½á·û
     for (int i = 0; i < vt_size; i++) {
@@ -85,12 +107,15 @@ void Left_Recursion() {  //ÅÐ¶ÏÓÐÎÞ×óµÝ¹é²¢Ïû³ý×óµÝ¹é
                             left = pron[i].ri[l];   //ss´æ²»º¬ÓÐ×óµÝ¹éµÄ²úÉúÊ½
                             cout << pron[i].li << " -> ";
                             int len = pron[i].ri[j].length();
-                            cout << left + " {" + pron[i].ri[j].substr(1, len - 1) + " }" << endl;
+                            string tmp = pron[i].ri[j].substr(ri_first.size());
+                            //cout << tmp << endl;
+                            cout << left + " {" + tmp + " }" << endl;
                             np[dnt].li = pron[i].li;
                             np[dnt].ri[np[dnt].size++] = left + " " + np[dnt].li + "\'";
                             dnt++;
                             np[dnt].li = np[dnt - 1].li + "\'";
-                            np[dnt].ri[np[dnt].size++] = pron[i].ri[j].substr(2, len - 1) + " " + np[dnt].li;
+                            np[dnt].ri[np[dnt].size++] =
+                                    pron[i].ri[j].substr(ri_first.size() + 1, len - 1) + " " + np[dnt].li;
                             np[dnt].ri[np[dnt].size++] = "@"; //¿Õ
                             dnt++;
                             break;
@@ -223,35 +248,6 @@ void test_first() {
     }
 }
 
-
-/*bool generate_can_noempty(string ri) {
-    //int len=ri.size();
-    stringstream ss(ri);
-    string ww;
-    while (ss >> ww) {
-        //cout << ww << endl;
-        if (judge_vt(ww) && ww != "@") {
-            return true;
-        } else if (judge_vn(ww)) {
-            bool tag = false;
-            for (int i = 0; i < dnt; i++) {
-                if (tag) break;
-                if (np[i].li == ww) {
-                    for (int j = 0; j < np[i].size; j++) {
-                        if (generate_can_noempty(np[i].ri[j])) {
-                            tag = true;
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-            if (tag) continue;
-            else return false;
-        }
-    }
-    return true;
-}*/
 
 bool follow_vis[maxn];
 int nowid; //·ÀÖ¹ËÀÑ­»·ÓÃ
@@ -396,8 +392,6 @@ void test_select() {
 }
 
 void pre_grammer() {
-    void get_token();
-
     freopen("input3.txt", "r", stdin);
     string ss;
     int start = 0;
