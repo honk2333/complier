@@ -6,12 +6,11 @@
 
 using namespace std;
 
-int main() {
-    get_token();
-    Union();
-    pre_grammer();
-    ll1();
+void complier() {
+    //get_token();
+    //Union();
+    //pre_grammer();
+    //ll1();
     //test_synbl();
-    translate();
-    return 0;
+    //translate();
 }

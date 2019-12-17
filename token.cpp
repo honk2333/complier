@@ -3,6 +3,7 @@
 //
 
 #include"complier.h"
+#include"QtDebug"
 
 using namespace std;
 
@@ -269,7 +270,8 @@ int is_word(string word) {  //用于语法分析器,返回当前单词类别
 }
 
 void get_token() {
-    freopen("test.txt", "r", stdin);
+    freopen("cache.txt", "r", stdin);
+    qDebug()<<2;
     Init();
     //freopen("output.txt","w",stdout);
     int state = 1;   //当前状态,开始状态为1
@@ -373,13 +375,13 @@ void get_token() {
                 word.push_back(ch);
         }
         if (state < 0) {   //进入了终止状态
-            //cout<<word<<endl;
+            qDebug()<<1<<endl;
             //word.erase(word.end() - -1);
             if (word != "") {   //已经读入单词的部分不为空,先把单词存入
                 cout << word << endl;
                 token[cnt].group = Findgroup(state, word);
                 token[cnt].id = Findid(token[cnt].group, word);
-                cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
+                qDebug() << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
                 cnt++;
             }
             if (ch != ' ' && ch != '\n') {   //当前字符不为空格或换行,说明当前字符也要作为一个单词处理

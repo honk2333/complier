@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MyWindow</class>
+ <widget class="QMainWindow" name="MyWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1237</width>
+    <height>752</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MyIDE</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(204, 204, 204);</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QPlainTextEdit" name="margin">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>61</width>
+      <height>671</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="codeditor">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>0</y>
+      <width>361</width>
+      <height>671</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">selection-background-color: rgb(149, 149, 149);
+selection-color: rgb(255, 255, 255);
+background-color: rgb(56, 56, 56);</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="adjustmodel">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>0</y>
+      <width>121</width>
+      <height>671</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(220, 220, 220);
+border-color: rgb(0, 0, 0);</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QFontComboBox" name="fontComboBox"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QComboBox" name="groundcomboBox">
+       <item>
+        <property name="text">
+         <string>黑色背景</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>白色背景</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>字体大小</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBox"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>字体风格设置</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="boldcheck">
+         <property name="text">
+          <string>bold</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="italiccheck">
+         <property name="text">
+          <string>italic</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="undercheck">
+         <property name="text">
+          <string>underlined</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>字体颜色设置</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="blackradio">
+         <property name="text">
+          <string>black</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="blueradio">
+         <property name="text">
+          <string>blue</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="yellowradio">
+         <property name="text">
+          <string>yellow</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="greenradio">
+         <property name="text">
+          <string>green</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>0</y>
+      <width>471</width>
+      <height>671</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="output">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>token序列</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="tokentext">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 170, 0);</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>单词表</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPlainTextEdit" name="wordlist">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 127);</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>四元式序列</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="foutext">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(170, 255, 127);</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>目标代码序列</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="codetext">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(170, 255, 255);</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1237</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="actionopenfile"/>
+    <addaction name="actionsavefile"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionopenfile"/>
+   <addaction name="actionsavefile"/>
+   <addaction name="separator"/>
+   <addaction name="actiontoken"/>
+   <addaction name="actiongrammer"/>
+   <addaction name="actionmean"/>
+   <addaction name="actionlanguage"/>
+   <addaction name="separator"/>
+   <addaction name="actionlook"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionopenfile">
+   <property name="text">
+    <string>打开文件</string>
+   </property>
+   <property name="toolTip">
+    <string>打开一个源代码文件</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionsavefile">
+   <property name="text">
+    <string>保存文件</string>
+   </property>
+   <property name="toolTip">
+    <string>保存当前编辑器的内容</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionlook">
+   <property name="text">
+    <string>查看文法</string>
+   </property>
+   <property name="toolTip">
+    <string>查看编译器文法</string>
+   </property>
+  </action>
+  <action name="actiontoken">
+   <property name="text">
+    <string>词法分析</string>
+   </property>
+  </action>
+  <action name="actiongrammer">
+   <property name="text">
+    <string>语法分析</string>
+   </property>
+  </action>
+  <action name="actionmean">
+   <property name="text">
+    <string>语义分析</string>
+   </property>
+  </action>
+  <action name="actionlanguage">
+   <property name="text">
+    <string>目标代码生成</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
