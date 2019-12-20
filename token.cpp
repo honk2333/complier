@@ -3,7 +3,9 @@
 //
 
 #include"complier.h"
-#include"QtDebug"
+#include"QMessageBox"
+#include"QDebug"
+#include"editor.h"
 
 using namespace std;
 
@@ -20,6 +22,7 @@ int len_k;
 string p[maxn];    //½ç·û
 int len_p;
 struct token token[maxn];
+int size_token = 0;
 
 map<string, int> II;
 map<string, int> CC;    //c×Ö·û
@@ -28,12 +31,11 @@ map<string, int> cc;    //c³£Êý
 map<string, int> KK;    //k¹Ø¼ü×Ö
 map<string, int> pp;    //p½ç·û
 
-int state_change(int state, char ch) {   //×´Ì¬×ªÒÆº¯Êý,¸ºÊý×´Ì¬´ú±íÖÕÖ¹Ì¬,ÕýÊý×´Ì¬´ú±í·ÇÖÕÖ¹Ì¬
+int state_change(int state, char ch,MyWindow* ww) {   //×´Ì¬×ªÒÆº¯Êý,¸ºÊý×´Ì¬´ú±íÖÕÖ¹Ì¬,ÕýÊý×´Ì¬´ú±í·ÇÖÕÖ¹Ì¬
     //-1´ú±í±äÁ¿»ò¹Ø¼ü×Ö(ºóÃæÔÙ½øÒ»²½Çø·Ö),-2´ú±í³£Êý,-3´ú±í×Ö·û´®,-4´ú±í×Ö·û,-6´ú±í½ç·û
     if (state == 1) {
         if (ch == ' ' || ch == '\n' || ch == '\t')    //Ìø¹ýµ¥´Ê¿ªÍ·µÄ¿Õ¸ñ
             return 1;
-
         else if (ch <= '9' && ch >= '0') {   //Êý×Ö
             return 4;
         } else if ((ch <= 'Z' && ch >= 'A') || (ch <= 'z' && ch >= 'a'))  //±äÁ¿
@@ -86,8 +88,12 @@ int state_change(int state, char ch) {   //×´Ì¬×ªÒÆº¯Êý,¸ºÊý×´Ì¬´ú±íÖÕÖ¹Ì¬,ÕýÊý×
         if (ch <= '9' && ch >= '0') {
             return 7;
         } else {    //¸ñÊ½´íÎó,±¨´í
-            printf("Êý¾Ý¸ñÊ½ÊäÈë´íÎó\n");
+            string dlgtitle="´Ê·¨´íÎó";
+            string strinfo="Ö´ÐÐ¹ý³Ì·¢ÏÖ´Ê·¨´íÎó,Êý¾Ý¸ñÊ½ÊäÈë´íÎó";
+            QMessageBox::warning(ww,QString::fromLocal8Bit(dlgtitle.c_str()),QString::fromLocal8Bit(strinfo.c_str()),QMessageBox::Ok);
             return -2;
+            //printf("Êý¾Ý¸ñÊ½ÊäÈë´íÎó\n");
+            //return -2;
         }
     }
     if (state == 7) {
@@ -100,8 +106,12 @@ int state_change(int state, char ch) {   //×´Ì¬×ªÒÆº¯Êý,¸ºÊý×´Ì¬´ú±íÖÕÖ¹Ì¬,ÕýÊý×
             ch == '-' || ch == '*' || ch == '/')   //Óöµ½ÖÕÖ¹·û,ËµÃ÷Êý×ÖÊäÈë½áÊø
             return -2;
         else {   //¸ñÊ½´íÎó,±¨´í
-            printf("Êý¾Ý¸ñÊ½ÊäÈë´íÎó\n");
+            string dlgtitle="´Ê·¨´íÎó";
+            string strinfo="Ö´ÐÐ¹ý³Ì·¢ÏÖ´Ê·¨´íÎó,Êý¾Ý¸ñÊ½ÊäÈë´íÎó";
+            QMessageBox::warning(ww,QString::fromLocal8Bit(dlgtitle.c_str()),QString::fromLocal8Bit(strinfo.c_str()),QMessageBox::Ok);
             return 7;
+            //printf("Êý¾Ý¸ñÊ½ÊäÈë´íÎó\n");
+            //return 7;
         }
     }
     if (state == 9) {   //¶ÁÍê×óµ¥ÒýºÅºó,¶ÁÈëÈÎÒâÒ»¸ö×Ö·û,½øÈë×´Ì¬10,µÈ´ý¶Á½øÓÒµ¥ÒýºÅ
@@ -111,8 +121,12 @@ int state_change(int state, char ch) {   //×´Ì¬×ªÒÆº¯Êý,¸ºÊý×´Ì¬´ú±íÖÕÖ¹Ì¬,ÕýÊý×
         if (ch == '\'')  //¶Á½øÓÒµ¥ÒýºÅ,µÈ´ý¶ÁÈëÏÂÒ»×Ö·û,Íê³É×Ö·ûµÄÊäÈë
             return 16;
         else {     //¶Á½øÀ´µÄ²»ÊÇµ¥ÒýºÅ,ËµÃ÷×Ö·û¸ñÊ½´íÎó,±¨´í
-            printf("×Ö·û¸ñÊ½´íÎó\n");
-            return 10;
+            string dlgtitle="´Ê·¨´íÎó";
+            string strinfo="Ö´ÐÐ¹ý³Ì·¢ÏÖ´Ê·¨´íÎó,×Ö·û¸ñÊ½´íÎó";
+            QMessageBox::warning(ww,QString::fromLocal8Bit(dlgtitle.c_str()),QString::fromLocal8Bit(strinfo.c_str()),QMessageBox::Ok);
+            return 0;
+            //printf("×Ö·û¸ñÊ½´íÎó\n");
+            //return 10;
         }
     }
     if (state == 16) {   //ÊäÈëÖÕÖ¹×Ö·û,×Ö·ûÊäÈëÍê±Ï
@@ -129,8 +143,12 @@ int state_change(int state, char ch) {   //×´Ì¬×ªÒÆº¯Êý,¸ºÊý×´Ì¬´ú±íÖÕÖ¹Ì¬,ÕýÊý×
         if (ch == '\"')  //¶ÁÈëÓÒË«ÒýºÅ.µÈ´ýÊäÈëÏÂÒ»×Ö·û,½áÊø×Ö·û´®µÄÊäÈë
             return 17;
         else {   //Ã»ÓÐ¶ÁÈëÓÒË«ÒýºÅ,ËµÃ÷×Ö·û´®¸ñÊ½´íÎó,±¨´í
-            printf("×Ö·û´®¸ñÊ½´íÎó\n");
+            string dlgtitle="´Ê·¨´íÎó";
+            string strinfo="Ö´ÐÐ¹ý³Ì·¢ÏÖ´Ê·¨´íÎó,×Ö·û´®¸ñÊ½´íÎó";
+            QMessageBox::warning(ww,QString::fromLocal8Bit(dlgtitle.c_str()),QString::fromLocal8Bit(strinfo.c_str()),QMessageBox::Ok);
             return 17;
+            //printf("×Ö·û´®¸ñÊ½´íÎó\n");
+            //return 17;
         }
     }
     if (state == 17) { //ÊäÈëÖÕÖ¹×Ö·û,×Ö·û´®ÊäÈëÍê±Ï
@@ -231,7 +249,10 @@ void Init() { //³õÊ¼»¯¹Ø¼ü´Ê±í,³öÏÖÔÚ¹Ø¼ü´Ê±íÖÐµÄµ¥´Ê¾ÍÊÇ¹Ø¼ü×Ö
     k[8] = "double";
     k[9] = "bool";
     k[10] = "for";
+    k[11] = "continue";
+    k[12] = "break";
     // k[9] = "include";
+    KK.clear();
     KK["int"] = 0;
     KK["main"] = 1;
     KK["void"] = 2;
@@ -243,7 +264,19 @@ void Init() { //³õÊ¼»¯¹Ø¼ü´Ê±í,³öÏÖÔÚ¹Ø¼ü´Ê±íÖÐµÄµ¥´Ê¾ÍÊÇ¹Ø¼ü×Ö
     KK["double"] = 8;
     KK["bool"] = 9;
     KK["for"] = 10;
-    len_k = 11;
+    KK["continue"]=11;
+    KK["break"]=12;
+    len_k = 13;
+    len_C=0;
+    len_a=0;
+    len_c=0;
+    len_p=0;
+    len_s=0;
+    II.clear();
+    CC.clear();
+    cc.clear();
+    SS.clear();
+    pp.clear();
 }
 
 int is_word(string word) {  //ÓÃÓÚÓï·¨·ÖÎöÆ÷,·µ»Øµ±Ç°µ¥´ÊÀà±ð
@@ -268,19 +301,72 @@ int is_word(string word) {  //ÓÃÓÚÓï·¨·ÖÎöÆ÷,·µ»Øµ±Ç°µ¥´ÊÀà±ð
     if (word == "#") return 3;
     return -1;
 }
+void printword_list(MyWindow* w){
+    //printf("µ¥´Ê±íÈçÏÂ£º-----------------------\n");   //´òÓ¡µ¥´Ê±í
+    QString ss;
+    w->clear_wordlist();
+    for (int i = 0; i < len_a; i++) {
+        QString id=QString::number(i);
+        QString name=QString::fromStdString(a[i]);
+        ss=id+" "+ QString::fromLocal8Bit("a±êÖ¾·û ")+name;
+        w->print_wordlist(ss);
+    }
+    for (int i = 0; i < len_C; i++) {
+        //cout << i << " " << "C×Ö·û " << C[i] << endl;
+        QString id=QString::number(i);
+        QString name=QString::fromStdString(C[i]);
+        ss=id+" "+QString::fromLocal8Bit("C×Ö·û ")+name;
+        w->print_wordlist(ss);
+    }
+    for (int i = 0; i < len_s; i++) {
+        //cout << i << " " << "S×Ö·û´® " << s[i] << endl;
+        QString id=QString::number(i);
+        QString name=QString::fromStdString(s[i]);
+        ss=id+" "+QString::fromLocal8Bit("S×Ö·û´® ")+name;
+        w->print_wordlist(ss);
+    }
+    for (int i = 0; i < len_c; i++) {
+        //cout << i << " " << "c³£Êý " << c[i] << endl;
+        QString id=QString::number(i);
+        QString name=QString::fromStdString(c[i]);
+        ss=id+" "+QString::fromLocal8Bit("c³£Êý ")+name;
+        w->print_wordlist(ss);
+    }
+    for (int i = 0; i < len_k; i++) {
+        //cout << i << " " << "k¹Ø¼ü×Ö " << k[i] << endl;
+        QString id=QString::number(i);
+        QString name=QString::fromStdString(k[i]);
+        ss=id+" "+QString::fromLocal8Bit("k¹Ø¼ü×Ö ")+name;
+        w->print_wordlist(ss);
+    }
+    for (int i = 0; i < len_p; i++) {
+        //cout << i << " " << "p½ç·û " << p[i] << endl;
+        QString id=QString::number(i);
+        QString name=QString::fromStdString(p[i]);
+        ss=id+" "+QString::fromLocal8Bit("p½ç·û ")+name;
+        w->print_wordlist(ss);
+    }
+}
+void printtoken(MyWindow* w){
+    QString ss;
+    w->clear_token();
+    for(int i=0;i<size_token;i++){
+        ss=QString::fromStdString(token[i].word)+"{ "+token[i].group+","+QString::number(token[i].id)+" }";
+        w->print_token(ss);
+    }
+}
+void get_token(MyWindow* w) {
+    freopen("cache", "r", stdin);
 
-void get_token() {
-    freopen("cache.txt", "r", stdin);
-    qDebug()<<2;
     Init();
     //freopen("output.txt","w",stdout);
     int state = 1;   //µ±Ç°×´Ì¬,¿ªÊ¼×´Ì¬Îª1
     int last_state = 0;   //¶ÁÈë¸Ã×Ö·ûÖ®Ç°µÄ×´Ì¬
     char ch;
     string word = "";
-    int cnt = 0; //µ¥´Ê¸öÊý
+    size_token = 0; //µ¥´Ê¸öÊý
     while ((ch = getchar()) != '#') {
-        //putchar(ch);
+        //qDebug()<<ch;
         if (state == 0) {   //´¦Àí×¢ÊÍ,×¢ÊÍºóÃæµÄ×Ö·û²»ÐèÒª¶Á
             if (ch != '\n')
                 continue;
@@ -296,11 +382,12 @@ void get_token() {
             (ch == '(' || ch == '{' || ch == ')' || ch == '}')) { //µ¥´Ê¿ªÍ·¼´ÎªÀ¨ºÅµÄÇé¿ö£¬Ö±½Ó½«À¨ºÅ×÷ÎªÒ»¸öµ¥´Ê·Ö³öÀ´
             word = "";
             word += ch; //ÓÒÀ¨ºÅµ¥¶ÀËãÒ»¸öµ¥´Ê
-            cout << word << endl;
-            token[cnt].group = 'p';    //²»ÓÃ¼Ó·ûºÅ±í
-            token[cnt].id = Findid(token[cnt].group, word);
-            cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-            cnt++;
+            //cout << word << endl;
+            token[size_token].group = 'p';    //²»ÓÃ¼Ó·ûºÅ±í
+            token[size_token].id = Findid(token[size_token].group, word);
+            token[size_token].word = word;
+            //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+            size_token++;
             word = "";
             state = 1;
             continue;
@@ -308,20 +395,22 @@ void get_token() {
         if (word == "<" || word == "=" || word == ">") {  //ÓÃÓÚ´¦ÀíÒ»Ð©ÌØÊâµÄµ¥´Ê,ÀýÈç>=,<=
             if (ch == '>' || ch == '<' || ch == '=') {
                 word += ch;
-                cout << word << endl;
-                token[cnt].group = 'p';  //²»ÓÃ¼Ó·ûºÅ±í
-                token[cnt].id = Findid(token[cnt].group, word);
-                cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-                cnt++;
+                //cout << word << endl;
+                token[size_token].group = 'p';  //²»ÓÃ¼Ó·ûºÅ±í
+                token[size_token].id = Findid(token[size_token].group, word);
+                token[size_token].word = word;
+                //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+                size_token++;
                 word = "";
                 state = 1;
                 continue;
             } else {
-                cout << word << endl;
-                token[cnt].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
-                token[cnt].id = Findid(token[cnt].group, word);
-                cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-                cnt++;
+                //cout << word << endl;
+                token[size_token].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
+                token[size_token].id = Findid(token[size_token].group, word);
+                token[size_token].word = word;
+                //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+                size_token++;
                 word = "";
                 state = 1;
             }
@@ -329,11 +418,12 @@ void get_token() {
         if (word == "/") {   //×¢ÊÍµÄ´¦Àí
             if (ch == '/') {
                 word += ch;
-                cout << word << endl;
-                token[cnt].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
-                token[cnt].id = Findid(token[cnt].group, word);
-                cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-                cnt++;
+                //cout << word << endl;
+                token[size_token].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
+                token[size_token].id = Findid(token[size_token].group, word);
+                token[size_token].word = word;
+                //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+                size_token++;
                 word = "";
                 state = 0;
                 continue;
@@ -342,32 +432,35 @@ void get_token() {
         if (((word == "+") && (ch == '+' || ch == '=')) || ((word == "-") && (ch == '-' || ch == '=')) ||
             ((word == "/" || word == "*") && (ch == '='))) {  //Ò»Ð©ÌØÊâÔËËã·ûµÄ´¦Àí,++,--,+=
             word += ch;
-            cout << word << endl;
-            token[cnt].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
-            token[cnt].id = Findid(token[cnt].group, word);
-            cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-            cnt++;
+            //cout << word << endl;
+            token[size_token].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
+            token[size_token].id = Findid(token[size_token].group, word);
+            token[size_token].word = word;
+            //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+            size_token++;
             word = "";
             state = 1;
             continue;
         } else if ((word == "*" || (word == "/" && ch != '/'))) {  //*,/×÷ÎªËãÊýÔËËã·û
-            cout << word << endl;
-            token[cnt].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
-            token[cnt].id = Findid(token[cnt].group, word);
-            cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-            cnt++;
+            //cout << word << endl;
+            token[size_token].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
+            token[size_token].id = Findid(token[size_token].group, word);
+            token[size_token].word = word;
+            //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+            size_token++;
             word = "";
             state = 1;
         } else if ((word == "+" || word == "-") && state != 3) {  //+,-ºÅ²»×÷ÎªÊý×Ö¿ªÍ·,×÷ÎªËãÊõÔËËã·û
-            cout << word << endl;
-            token[cnt].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
-            token[cnt].id = Findid(token[cnt].group, word);
-            cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-            cnt++;
+            //cout << word << endl;
+            token[size_token].group = 'p'; //²»ÓÃ¼Ó·ûºÅ±í
+            token[size_token].id = Findid(token[size_token].group, word);
+            token[size_token].word = word;
+            //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+            size_token++;
             word = "";
         }
         int state_before = state;
-        state = state_change(state_before, ch);
+        state = state_change(state_before, ch,w);
         //cout << ch << " ! " << state << endl;
         if (state > 0) {
             //µ¥´ÊÎ´ÖÕ½á
@@ -375,14 +468,15 @@ void get_token() {
                 word.push_back(ch);
         }
         if (state < 0) {   //½øÈëÁËÖÕÖ¹×´Ì¬
-            qDebug()<<1<<endl;
+            //cout<<word<<endl;
             //word.erase(word.end() - -1);
             if (word != "") {   //ÒÑ¾­¶ÁÈëµ¥´ÊµÄ²¿·Ö²»Îª¿Õ,ÏÈ°Ñµ¥´Ê´æÈë
-                cout << word << endl;
-                token[cnt].group = Findgroup(state, word);
-                token[cnt].id = Findid(token[cnt].group, word);
-                qDebug() << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-                cnt++;
+                //cout << word << endl;
+                token[size_token].group = Findgroup(state, word);
+                token[size_token].id = Findid(token[size_token].group, word);
+                token[size_token].word = word;
+                //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+                size_token++;
             }
             if (ch != ' ' && ch != '\n') {   //µ±Ç°×Ö·û²»Îª¿Õ¸ñ»ò»»ÐÐ,ËµÃ÷µ±Ç°×Ö·ûÒ²Òª×÷ÎªÒ»¸öµ¥´Ê´¦Àí
                 if (ch == '>' || ch == '<' || ch == '=' || ch == '/' || ch == '+' || ch == '-' ||
@@ -396,40 +490,21 @@ void get_token() {
                 } else {   //ÆäËûÇé¿ö,½«µ±Ç°×Ö·û×÷Îªµ¥´Ê´æÈë
                     word = "";
                     word.push_back(ch);
-                    cout << word << endl;
-                    token[cnt].group = 'p';
-                    token[cnt].id = Findid(token[cnt].group, word);
-                    cout << "{" << token[cnt].group << "," << token[cnt].id << "}" << endl;
-                    cnt++;
+                    //cout << word << endl;
+                    token[size_token].group = 'p';
+                    token[size_token].id = Findid(token[size_token].group, word);
+                    token[size_token].word = word;
+                    //cout << "{" << token[size_token].group << "," << token[size_token].id << "}" << endl;
+                    size_token++;
                 }
             }
             word = "";   //³õÊ¼»¯,Çå¿Õµ¥´Ê²¿·Ö
             last_state = state;  //×´Ì¬³õÊ¼»¯Îª1
             state = 1;
         }
-    }
 
-    printf("µ¥´Ê±íÈçÏÂ£º-----------------------\n");   //´òÓ¡µ¥´Ê±í
-    for (int i = 0; i < len_a; i++) {
-        cout << i << " " << "a±êÖ¾·û " << a[i] << endl;;
     }
-    for (int i = 0; i < len_C; i++) {
-        cout << i << " " << "C×Ö·û " << C[i] << endl;;
-    }
-    for (int i = 0; i < len_s; i++) {
-        cout << i << " " << "S×Ö·û´® " << s[i] << endl;;
-    }
-    for (int i = 0; i < len_c; i++) {
-        cout << i << " " << "c³£Êý " << c[i] << endl;;
-    }
-    for (int i = 0; i < len_k; i++) {
-        cout << i << " " << "k¹Ø¼ü×Ö " << k[i] << endl;;
-    }
-    for (int i = 0; i < len_p; i++) {
-        cout << i << " " << "p½ç·û " << p[i] << endl;;
-    }
-    for (int i = 0; i < len_a; i++) {
-        add_synbl(a[i]);  //Ìî·ûºÅ±í
-    }
-
+    printtoken(w);
+    printword_list(w);
+    fclose(stdin);
 }

@@ -27,7 +27,6 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
     editor.cpp \
-    complier.cpp \
     grammer.cpp \
     language.cpp \
     pre_grammer.cpp \

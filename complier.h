@@ -3,6 +3,7 @@
 //
 
 #include <bits/stdc++.h>
+#include"editor.h"
 
 using namespace std;
 #ifndef CLION_COMPLIER_H
@@ -22,8 +23,10 @@ struct QT_str {
     string Operand1;
     string Operand2;
     string result;
+    int QT_num;
 };
 struct token {   //token序列结构体
+    string word;
     int id;
     char group;
 };
@@ -34,19 +37,25 @@ int is_word(string);
 
 void pre_grammer();
 
-void add_synbl(string name);
+int add_synbl(string name);
 
-void get_token();
+void get_token(MyWindow* w);
 
-void ll1();
+void get_mean(MyWindow* ww);
 
-void test_synbl();
+void ll1(MyWindow* w);
+
+void new_Right();
+
+void make_table();
+
+void get_synbl(MyWindow* w);
 
 bool judge_vn(string c);
 
 bool judge_vt(string c);
 
-void translate();
+void translate(MyWindow* w);
 
 void Union();
 

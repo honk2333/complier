@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1237</width>
+    <width>1409</width>
     <height>752</height>
    </rect>
   </property>
@@ -14,7 +14,7 @@
    <string>MyIDE</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(204, 204, 204);</string>
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPlainTextEdit" name="margin">
@@ -74,7 +74,18 @@ border-color: rgb(0, 0, 0);</string>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QFontComboBox" name="fontComboBox"/>
+      <layout class="QVBoxLayout" name="verticalLayout_12">
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>编辑器字体</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFontComboBox" name="fontComboBox"/>
+       </item>
+      </layout>
      </item>
      <item>
       <spacer name="horizontalSpacer_3">
@@ -90,18 +101,29 @@ border-color: rgb(0, 0, 0);</string>
       </spacer>
      </item>
      <item>
-      <widget class="QComboBox" name="groundcomboBox">
+      <layout class="QVBoxLayout" name="verticalLayout_11">
        <item>
-        <property name="text">
-         <string>黑色背景</string>
-        </property>
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>编辑器风格</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <property name="text">
-         <string>白色背景</string>
-        </property>
+        <widget class="QComboBox" name="groundcomboBox">
+         <item>
+          <property name="text">
+           <string>黑色背景</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>白色背景</string>
+          </property>
+         </item>
+        </widget>
        </item>
-      </widget>
+      </layout>
      </item>
      <item>
       <spacer name="horizontalSpacer_4">
@@ -234,7 +256,7 @@ border-color: rgb(0, 0, 0);</string>
      <rect>
       <x>550</x>
       <y>0</y>
-      <width>471</width>
+      <width>491</width>
       <height>671</height>
      </rect>
     </property>
@@ -321,13 +343,39 @@ border-color: rgb(0, 0, 0);</string>
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>0</y>
+      <width>341</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_10">
+     <item>
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>符号表</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPlainTextEdit" name="synbltext">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 170, 255);</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1237</width>
+     <width>1409</width>
      <height>26</height>
     </rect>
    </property>
@@ -338,11 +386,43 @@ border-color: rgb(0, 0, 0);</string>
     <addaction name="actionopenfile"/>
     <addaction name="actionsavefile"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>查看</string>
+    </property>
+    <addaction name="actionlook"/>
+    <addaction name="action"/>
+    <addaction name="action_trans"/>
+    <addaction name="separator"/>
+    <addaction name="action_first"/>
+    <addaction name="action_follow"/>
+    <addaction name="action_select"/>
+    <addaction name="separator"/>
+    <addaction name="action_LL1"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>编辑</string>
+    </property>
+    <addaction name="action_redo"/>
+    <addaction name="action_undo"/>
+    <addaction name="separator"/>
+    <addaction name="action_selectall"/>
+    <addaction name="action_copy"/>
+    <addaction name="action_cut"/>
+    <addaction name="action_paste"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_2"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -357,10 +437,13 @@ border-color: rgb(0, 0, 0);</string>
    <addaction name="actiongrammer"/>
    <addaction name="actionmean"/>
    <addaction name="actionlanguage"/>
+   <addaction name="action_runall"/>
    <addaction name="separator"/>
+   <addaction name="action_dosbox"/>
+   <addaction name="separator"/>
+   <addaction name="action_ll1"/>
    <addaction name="actionlook"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionopenfile">
    <property name="text">
     <string>打开文件</string>
@@ -411,8 +494,198 @@ border-color: rgb(0, 0, 0);</string>
     <string>目标代码生成</string>
    </property>
   </action>
+  <action name="action_first">
+   <property name="text">
+    <string>查看first集</string>
+   </property>
+  </action>
+  <action name="action_follow">
+   <property name="text">
+    <string>查看follow集</string>
+   </property>
+  </action>
+  <action name="action_select">
+   <property name="text">
+    <string>查看select集</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>查看化简后的文法</string>
+   </property>
+  </action>
+  <action name="action_LL1">
+   <property name="text">
+    <string>查看LL1分析表</string>
+   </property>
+  </action>
+  <action name="action_dosbox">
+   <property name="text">
+    <string>运行dosbox</string>
+   </property>
+  </action>
+  <action name="action_copy">
+   <property name="text">
+    <string>复制</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="action_cut">
+   <property name="text">
+    <string>剪切</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action_paste">
+   <property name="text">
+    <string>粘贴</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="action_undo">
+   <property name="text">
+    <string>撤销</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="action_redo">
+   <property name="text">
+    <string>恢复</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="action_selectall">
+   <property name="text">
+    <string>全选</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_runall">
+   <property name="text">
+    <string>一键运行</string>
+   </property>
+  </action>
+  <action name="action_trans">
+   <property name="text">
+    <string>查看翻译文法</string>
+   </property>
+  </action>
+  <action name="action_ll1">
+   <property name="text">
+    <string>查看ll1分析法过程</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>action_copy</sender>
+   <signal>triggered()</signal>
+   <receiver>codeditor</receiver>
+   <slot>copy()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_cut</sender>
+   <signal>triggered()</signal>
+   <receiver>codeditor</receiver>
+   <slot>cut()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_paste</sender>
+   <signal>triggered()</signal>
+   <receiver>codeditor</receiver>
+   <slot>paste()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_redo</sender>
+   <signal>triggered()</signal>
+   <receiver>codeditor</receiver>
+   <slot>redo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_undo</sender>
+   <signal>triggered()</signal>
+   <receiver>codeditor</receiver>
+   <slot>undo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_selectall</sender>
+   <signal>triggered()</signal>
+   <receiver>codeditor</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

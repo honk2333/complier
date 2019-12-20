@@ -2,17 +2,21 @@
 
 using namespace std;
 
-struct production np[maxn], pron[maxn];//p是从文件中读入的文法,np是消除左递归后的文法
+struct production np[maxn], pron[maxn],save_np[maxn];//p是从文件中读入的文法,np是消除左递归后的文法
 int cnt = 0;
 int dnt = 0;
 
-int vt_size = 5;
-int vn_size = 12;
-string vt[maxn] = {"w0", "w1", "id", "cons", "@"}; //终结符集合
+int vt_size = 35;
+int vn_size = 33;
+string vt[maxn] = {"w0", "w1", "id", "cons", "@","[","]","while","else","{","}","(",")","=",
+                   "break","continue",";","id",",",">","<",">=","<=","==","!=","return","main","void","char",
+                   "int","double","bool","if","for","cons"}; //终结符集合
 string vn[maxn] = {"MAINPRO", "S_LIST", "TYPE", "S", "EVA_SENTENCE", "SEL_SENTENCE", "ITE_SENTENCE", "F", "E", "T",
-                   "T'",
-                   "E'"}; //非终结符集合
-bool Find(string s) {
+                   "T'", "VAR", "arr_num", "namelist", "D", "EVA_", "PRO", "external_declaration", "Head_file",
+                   "E'", "filename", "FUN", "FUN_name", "PRO_", "MAINPRO", "SUBPRO", "DEF_LIST", "DEF_SEN", "JUMP_SEM",
+                   "SUBPRO_", "ELIST",
+                   "RETURN_"}; //非终结符集合
+/*bool Find(string s) {
     for (int i = 0; i < vt_size; i++) {
         if (vt[i] == s) return true;
     }
@@ -30,8 +34,8 @@ void Union() {   //通过词法分析器来扩充终结符表
     for (int i = 0; i < len_p; i++) {
         if (!Find(p[i])) vt[vt_size++] = p[i];
     }
-    cout << vt_size << endl;
-}
+    //cout << vt_size << endl;
+}*/
 
 bool judge_vt(string c) {  //判断一个单词是否是终结符
     for (int i = 0; i < vt_size; i++) {
@@ -132,8 +136,8 @@ void Left_Recursion() {  //判断有无左递归并消除左递归
                 dnt++;
             }
         }
-        cout << "消除括号后的文法为：" << endl;
-        test2_output();
+        //cout << "消除括号后的文法为：" << endl;
+        //test2_output();
     } else {
         dnt = cnt;
         for (int i = 0; i < cnt; i++) {
@@ -234,7 +238,7 @@ void get_first() {
 //打印first集
 void test_first() {
     get_first();
-    cout << "First_set:" << endl;
+    /*cout << "First_set:" << endl;
     for (int i = 0; i < dnt; i++) {
         for (int j = 0; j < np[i].size; j++) {
             cout << "First of " << np[i].ri[j] << endl;
@@ -245,7 +249,7 @@ void test_first() {
             }
             cout << endl;
         }
-    }
+    }*/
 }
 
 
@@ -346,7 +350,7 @@ void get_follow() {
 //输入follow集并输出
 void test_follow() {
     get_follow();
-    cout << "Follow_set:" << endl;
+    /*cout << "Follow_set:" << endl;
     for (int i = 0; i < dnt; i++) {
         cout << "Follow of " << np[i].li << endl;
         int len = np[i].follow.size();
@@ -355,7 +359,7 @@ void test_follow() {
             cout << *it << " ";
         }
         cout << endl;
-    }
+    }*/
 }
 
 //生成select集
@@ -386,7 +390,7 @@ void get_select() {
 
 void test_select() {
     get_select();
-    cout << "Select_set:" << endl;
+    /*cout << "Select_set:" << endl;
     for (int i = 0; i < dnt; i++) {
         for (int j = 0; j < np[i].size; j++) {
             cout << "Select of " << np[i].li << " -> " << np[i].ri[j] << endl;
@@ -397,11 +401,11 @@ void test_select() {
             }
             cout << endl;
         }
-    }
+    }*/
 }
 
 void pre_grammer() {
-    freopen("input3.txt", "r", stdin);
+    freopen("grammerlist.txt", "r", stdin);
     string ss;
     int start = 0;
     while (getline(cin, ss)) {
@@ -449,7 +453,7 @@ void pre_grammer() {
         pron[cnt].size = pron[cnt].size + 1;
         cnt++;
     }
-    test1_output();
+    //test1_output();
     Left_Recursion();  //判断并消除左递归
     test_first();
     test_follow();
