@@ -1,2 +1,2 @@
 # complier
-NEU课设
+NEU东北大学编译原理课设
